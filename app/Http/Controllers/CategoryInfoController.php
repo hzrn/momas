@@ -1,0 +1,102 @@
+<?php
+
+namespace App\Http\Controllers;
+
+
+use Illuminate\Http\Request;
+use App\Models\CategoryInfo;
+
+
+
+class CategoryInfoController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $categoryinfo = CategoryInfo::MosqueUser()->latest()->paginate(10);
+        $title = 'Category Info';
+        return view('categoryinfo_index', compact('categoryinfo', 'title'));
+        
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        $categoryinfo = new CategoryInfo();
+        $title = 'Category Info Form';
+        return view('categoryinfo_form', compact('categoryinfo', 'title'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $requestData = $request->validate([
+            'name' => 'required',
+            'description' => 'nullable',
+        ]);
+
+        $categoryinfo = CategoryInfo::create($requestData);
+        flash('Data saved successfully')->success();
+        return redirect()->route('categoryinfo.index')->with('success', 'Data saved successfully');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show($id)
+    {
+        $categoryinfo = CategoryInfo::findOrFail($id);
+        $title = 'Category Info';
+        return view('categoryinfo_form', compact('categoryinfo'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit($id)
+    {
+        
+        $categoryinfo = CategoryInfo::findOrFail($id);
+        $title = 'Category Info Edit';
+        return view('categoryinfo_form', compact('categoryinfo', 'title'));
+
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, $id)
+    {
+        $categoryinfo = CategoryInfo::findOrFail($id);
+
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'description' => 'nullable',
+        ]);
+
+        $categoryinfo->update($validatedData);
+
+        flash('Data updated successfully')->success();
+
+        return redirect()->route('categoryinfo.index')->with('success', 'Data updated successfully');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($id)
+    {
+        $categoryinfo = CategoryInfo::findOrFail($id);
+        $categoryinfo->delete();
+
+        flash('Data deleted successfully')->success();
+
+        return redirect()->route('categoryinfo.index')->with('success', 'Data deleted successfully');
+    }
+}
