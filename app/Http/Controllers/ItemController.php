@@ -4,118 +4,137 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\CategoryItem;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ItemController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the items.
      */
     public function index()
     {
-        $item = Item::with('category')->MosqueUser()->latest()->paginate(10);
-        $title = 'Item';
-        return view('item_index', compact('item', 'title'));
+        $items = Item::with('category')->MosqueUser()->latest()->paginate(10);
+        return view('item_index', compact('items'))->with('title', __('item.title'));
     }
-    
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new item.
      */
     public function create()
     {
-        // Assuming you have a way to get the current mosque's ID, e.g., from the session or the authenticated user
-        $currentMosqueId = auth()->user()->mosque_id; // Or another method to get the current mosque ID
-    
-        $data['item'] = new Item();
-        $data['route'] = 'item.store';
-        $data['method'] = 'POST';
-        $data['categoryList'] = CategoryItem::where('mosque_id', $currentMosqueId)->pluck('name', 'id'); // Filter by mosque
-        $data['title'] = 'Add Item';
-    
-        return view('item_form', $data);
+        $categoryList = CategoryItem::where('mosque_id', auth()->user()->mosque_id)->pluck('name', 'id');
+        return view('item_form', [
+            'item' => new Item(),
+            'route' => 'item.store',
+            'method' => 'POST',
+            'categoryList' => $categoryList,
+            'title' => __('item.form_title'),
+        ]);
     }
-    
-    
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created item.
      */
     public function store(Request $request)
     {
-        // Validate the incoming request data
         $requestData = $request->validate([
-            'name' => 'required|string|max:255', // Name of the item
-            'category_item_id' => 'required|exists:category_items,id', // Valid category ID
-            'description' => 'nullable|string', // Optional description
-            'quantity' => 'required|integer|min:1', // Quantity should be a positive integer
-            'price' => 'required|numeric|min:0', // Price should be a positive decimal number
+            'name' => 'required|string|max:255',
+            'category_item_id' => 'required|exists:category_items,id',
+            'description' => 'nullable|string',
+            'quantity' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:0',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-    
-        // Add the created_by field to the request data, assuming the user is authenticated
-        $requestData['created_by'] = auth()->user()->id;
-    
-        // Create the item with the validated data
+
+        if ($request->hasFile('photo')) {
+            $imageName = uniqid() . '.' . $request->photo->extension();
+            $request->photo->storeAs('public/items', $imageName);
+            $requestData['photo'] = $imageName;
+        }
+
+        $requestData['created_by'] = auth()->id();
         Item::create($requestData);
-    
-        // Flash success message and redirect to the item index page
-        flash('Item created successfully')->success();
-    
-        return redirect()->route('item.index')->with('success', 'Item created successfully');
+        flash(__('item.saved'))->success();
+        return redirect()->route('item.index');
     }
-    
 
     /**
-     * Display the specified resource.
+     * Display the specified item.
      */
     public function show(Item $item)
     {
-        //
+        $item->load('createdBy', 'updatedBy');
+        return view('item_show', compact('item'))->with('title', __('item.details_title'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified item.
      */
     public function edit(Item $item)
     {
-        $data['item'] = $item;
-        $data['route'] = ['item.update', $item->id];
-        $data['method'] = 'PUT';
-        $data['categoryList'] = CategoryItem::pluck('name', 'id');
-        $data['title'] = 'Edit Item';
-        return view('item_form', $data);
+        $categoryList = CategoryItem::pluck('name', 'id');
+        return view('item_form', [
+            'item' => $item,
+            'route' => ['item.update', $item->id],
+            'method' => 'PUT',
+            'categoryList' => $categoryList,
+            'title' => __('item.edit_title'),
+        ]);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified item.
      */
     public function update(Request $request, Item $item)
     {
         $requestData = $request->validate([
-            'name' => 'required|string|max:255', // Name of the item
-            'category_item_id' => 'required|exists:category_items,id', // Valid category ID
-            'description' => 'nullable|string', // Optional description
-            'quantity' => 'required|integer|min:1', // Quantity should be a positive integer
-            'price' => 'required|numeric|min:0', // Price should be a positive decimal number
+            'name' => 'required|string|max:255',
+            'category_item_id' => 'required|exists:category_items,id',
+            'description' => 'nullable|string',
+            'quantity' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:0',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $item->update($requestData);
-        flash('Data edited successfully')->success();
+        if ($request->hasFile('photo')) {
+            if ($item->photo) {
+                Storage::delete('public/items/' . $item->photo);
+            }
+            $imageName = uniqid() . '.' . $request->photo->extension();
+            $request->photo->storeAs('public/items', $imageName);
+            $requestData['photo'] = $imageName;
+        }
 
-        return redirect()->route('item.index')->with('success', 'Item updated successfully');
+        $item->update($requestData + ['updated_by' => auth()->id()]);
+        flash(__('item.updated'))->success();
+        return redirect()->route('item.index');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified item.
      */
-    public function destroy($id)
-{
-    $item = Item::findOrFail($id);
-    $mosque_id = $item->mosque_id;
-    $item->delete();
+    public function destroy(Item $item)
+    {
+        if ($item->photo) {
+            Storage::delete('public/items/' . $item->photo);
+        }
+        $item->delete();
 
-    flash('Data deleted successfully')->success();
+        flash(__('item.deleted'))->success();
+        return redirect()->route('item.index');
+    }
 
-    return redirect()->route('item.index')->with('success', 'Data deleted successfully');
-}
+    /**
+     * Export the item list as a PDF.
+     */
+    public function exportPDF()
+    {
+        $items = Item::MosqueUser()->get();
+        $mosqueName = optional(auth()->user()->mosque)->name ?? __('item.no_mosque');
+
+        $pdf = Pdf::loadView('item_pdf', compact('items', 'mosqueName'));
+        return $pdf->download('item_list.pdf');
+    }
 }

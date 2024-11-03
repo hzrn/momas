@@ -86,7 +86,7 @@
     </div>
 
     <!-- Latest Cashflow Table -->
-    <div class="row">
+    <div class="row d-none">
         <div class="col-12 col-lg-8 col-xxl-9 d-flex">
             <div class="card flex-fill">
                 <div class="card-header">

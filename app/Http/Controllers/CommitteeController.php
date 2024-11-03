@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Committee;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -13,9 +14,12 @@ class CommitteeController extends Controller
      */
     public function index()
     {
-        $committee = Committee::MosqueUser()->latest()->paginate(10);
-        $title = 'Committee';
-        return view('committee_index', compact('committee', 'title'));
+        // Retrieve committees ordered by latest created first
+        $committee = Committee::MosqueUser()->orderBy('created_at', 'desc')->get();
+        return view('committee_index', [
+            'committee' => $committee,
+            'title' => __('committee.title'),
+        ]);
     }
 
     /**
@@ -23,54 +27,44 @@ class CommitteeController extends Controller
      */
     public function create()
     {
-        $committee = new Committee();
-        $title = 'Committee Form';
-        return view('committee_form', compact('committee', 'title'));
+        return view('committee_form', [
+            'committee' => new Committee(),
+            'title' => __('committee.form_title'),
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-{
-    // Validate the incoming request data
-    $requestData = $request->validate([
-        'name' => 'required|string|max:255',
-        'phone_num' => 'required|string|min:0|max:15',
-        'position' => 'required|string|max:255',
-        'address' => 'required|string|max:500',
-        'photo' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+    {
+        $requestData = $request->validate([
+            'name' => 'required|string|max:255',
+            'phone_num' => 'required|string|max:15',
+            'position' => 'required|string|max:255',
+            'address' => 'required|string|max:500',
+            'photo' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+        ]);
 
-    ]);
+        if ($request->hasFile('photo')) {
+            $imageName = $this->storePhoto($request->file('photo'));
+            $requestData['photo'] = $imageName;
+        }
 
-    // Handle image upload
-    if ($request->hasFile('photo')) {
-
-        $image = $request->file('photo');
-        $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-        $image->storeAs('public/committees', $imageName);
-
-        // Update request data with image name
-        $requestData['photo'] = $imageName;
+        Committee::create($requestData);
+        flash(__('committee.saved'))->success();
+        return redirect()->route('committee.index');
     }
-
-
-
-    // Create a new committee record with validated data
-    $committee = Committee::create($requestData);
-
-    flash('Data saved successfully')->success();
-    return redirect()->route('committee.index')->with('success', 'Data saved successfully');
-}
-
 
     /**
      * Display the specified resource.
      */
     public function show(Committee $committee)
     {
-        $title = 'Committee Details';
-        return view('committee_show', compact('committee', 'title'));
+        return view('committee_show', [
+            'committee' => $committee,
+            'title' => __('committee.details_title'),
+        ]);
     }
 
     /**
@@ -78,64 +72,76 @@ class CommitteeController extends Controller
      */
     public function edit(Committee $committee)
     {
-        $data['committee'] = $committee;
-        $data['route'] = ['committee.update', $committee->id];
-        $data['method'] = 'PUT';
-        $data['title'] = 'Edit Committee';
-        return view('committee_form', $data);
+        return view('committee_form', [
+            'committee' => $committee,
+            'title' => __('committee.edit_title'),
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Committee $committee)
-{
-    // Validate the request data
-    $validatedData = $request->validate([
-        'name' => 'required|string|max:255',
-        'phone_num' => 'required|string|min:0|max:15',
-        'position' => 'required|string|max:255',
-        'address' => 'required|string|max:500',
-        'photo' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'phone_num' => 'required|string|max:15',
+            'position' => 'required|string|max:255',
+            'address' => 'required|string|max:500',
+            'photo' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+        ]);
 
-    ]);
-
-    // Handle image upload
-    if ($request->hasFile('photo')) {
-        // Remove the old photo if it exists
-        if ($committee->photo) {
-            Storage::delete('public/committees/' . $committee->photo);
+        if ($request->hasFile('photo')) {
+            $this->deletePhoto($committee->photo);
+            $validatedData['photo'] = $this->storePhoto($request->file('photo'));
         }
 
-        $image = $request->file('photo');
-        $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-        $path = $image->storeAs('public/committees', $imageName);
-
-        // Update request data with new image name
-        $validatedData['photo'] = $imageName;
+        $committee->update($validatedData);
+        flash(__('committee.updated'))->success();
+        return redirect()->route('committee.index');
     }
-
-
-
-    // Update the committee record
-    $committee->update($validatedData + ['updated_by' => auth()->id()]);
-
-    flash('Data updated successfully')->success();
-    return redirect()->route('committee.index')->with('success', 'Data updated successfully');
-}
-
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Committee $committee)
     {
-        if ($committee->photo) {
-            Storage::delete('public/committees/' . $committee->photo);
-        }
-
+        $this->deletePhoto($committee->photo);
         $committee->delete();
-        flash('Data deleted successfully')->success();
-        return redirect()->route('committee.index')->with('success', 'Data deleted successfully');
+
+        flash(__('committee.deleted'))->success();
+        return redirect()->route('committee.index');
+    }
+
+    /**
+     * Export the committee list as a PDF.
+     */
+    public function exportPDF()
+    {
+        $committee = Committee::MosqueUser()->get();
+        $mosqueName = optional(auth()->user()->mosque)->name ?? __('committee.no_mosque');
+
+        $pdf = Pdf::loadView('committee_pdf', compact('committee', 'mosqueName'));
+        return $pdf->download('committee_list.pdf');
+    }
+
+    /**
+     * Store uploaded photo and return the filename.
+     */
+    protected function storePhoto($image)
+    {
+        $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+        $image->storeAs('public/committees', $imageName);
+        return $imageName;
+    }
+
+    /**
+     * Delete photo from storage if it exists.
+     */
+    protected function deletePhoto($photo)
+    {
+        if ($photo) {
+            Storage::delete('public/committees/' . $photo);
+        }
     }
 }

@@ -10,53 +10,66 @@
             <table class="table table-striped">
                 <tbody>
                     <tr>
-                        <td><strong>Date:</strong></td>
+                        <td><strong>{{ __('cashflow.date') }}:</strong></td>
                         <td>{{ $cashflow->date }}</td>
                     </tr>
                     <tr>
-                        <td><strong>Category:</strong></td>
-                        <td>{{ $cashflow->category }}</td>
+                        <td><strong>{{ __('cashflow.category') }}:</strong></td>
+                        <td>{{ __('cashflow.' . strtolower($cashflow->category)) }}</td>
                     </tr>
                     <tr>
-                        <td><strong>Description:</strong></td>
+                        <td><strong>{{ __('cashflow.description') }}:</strong></td>
                         <td>{{ $cashflow->description }}</td>
                     </tr>
                     <tr>
-                        <td><strong>Type:</strong></td>
-                        <td>{{ $cashflow->type }}</td>
+                        <td><strong>{{ __('cashflow.type') }}:</strong></td>
+                        <td>
+                            @if($cashflow->type === 'expenses')
+                                {{ __('cashflow.expenses') }}
+                            @elseif($cashflow->type === 'income')
+                                {{ __('cashflow.income') }}
+                            @else
+                                {{ $cashflow->type }}
+                            @endif
+                        </td>
                     </tr>
+
                     <tr>
-                        <td><strong>Amount:</strong></td>
+                        <td><strong>{{ __('cashflow.amount') }}:</strong></td>
                         <td>{{ formatRM($cashflow->amount) }}</td>
                     </tr>
                     <tr>
-                        <td><strong>Photo:</strong></td>
+                        <td><strong>{{ __('cashflow.photo') }}:</strong></td>
                         <td>
                             @if ($cashflow->photo)
-                                <!-- Clickable image that triggers modal -->
-                                <img src="{{ asset('storage/cashflows/' . $cashflow->photo) }}" alt="{{ $cashflow->name }}" width="100" height="100" data-bs-toggle="modal" data-bs-target="#photoModal" style="cursor: pointer;">
+                                <!-- Clickable image to open the modal -->
+                                <img src="{{ asset('storage/cashflows/' . $cashflow->photo) }}"
+                                     alt="{{ $cashflow->name }}"
+                                     width="100" height="100"
+                                     data-bs-toggle="modal" data-bs-target="#photoModal"
+                                     style="cursor: pointer;">
                             @else
-                                No Photo
+                                {{ __('cashflow.no_photo') }}
                             @endif
                         </td>
                     </tr>
                     <tr>
-                        <td><strong>Created by:</strong></td>
-                        <td>{{ ($cashflow->createdBy)->name }}</td>
+                        <td><strong>{{ __('cashflow.created_by') }}:</strong></td>
+                        <td>{{ $cashflow->createdBy->name }}</td>
                     </tr>
                     <tr>
-                        <td><strong>Updated by:</strong></td>
+                        <td><strong>{{ __('cashflow.updated_by') }}:</strong></td>
                         <td>{{ optional($cashflow->updatedBy)->name ?? '-' }}</td>
                     </tr>
                     <tr>
-                        <td><strong>Created at:</strong></td>
+                        <td><strong>{{ __('cashflow.created_at') }}:</strong></td>
                         <td>{{ $cashflow->created_at->format('d-m-Y H:i') }}</td>
                     </tr>
                     <tr>
-                        <td><strong>Updated at:</strong></td>
+                        <td><strong>{{ __('cashflow.updated_at') }}:</strong></td>
                         <td>
                             @if ($cashflow->created_at->eq($cashflow->updated_at))
-                                -
+                                {{ __('cashflow.not_updated') }}
                             @else
                                 {{ $cashflow->updated_at->format('d-m-Y H:i') }}
                             @endif
@@ -65,7 +78,9 @@
                 </tbody>
             </table>
 
-            <a href="{{ route('cashflow.index') }}" class="btn btn-secondary mt-3">Back to Cashflow List</a>
+            <a href="{{ route('cashflow.index') }}" class="btn btn-secondary mt-3">
+                {{ __('cashflow.back_to_list') }}
+            </a>
         </div>
     </div>
 
@@ -73,13 +88,10 @@
     <div class="modal fade" id="photoModal" tabindex="-1" aria-labelledby="photoModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="photoModalLabel">Photo Preview</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
                 <div class="modal-body text-center">
-                    <!-- Display the large photo inside the modal -->
-                    <img src="{{ asset('storage/cashflows/' . $cashflow->photo) }}" alt="{{ $cashflow->name }}" class="img-fluid">
+                    <img src="{{ asset('storage/cashflows/' . $cashflow->photo) }}"
+                         alt="{{ $cashflow->name }}"
+                         class="img-fluid">
                 </div>
             </div>
         </div>

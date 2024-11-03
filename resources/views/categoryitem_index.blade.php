@@ -2,20 +2,20 @@
 
 @section('content')
 <h1 class="h3 mb-3">{{$title}}</h1>
-<a href="{{route('categoryitem.create')}}" class="btn btn-primary mb-3">Add {{$title}}</a>
+<a href="{{route('categoryitem.create')}}" class="btn btn-primary mb-3">{{__('categoryitem.add')}}</a>
 
 <div class="row">
     <div class="col-12">
         <div class="card">
-               <div class="card-body">
-                    <div class="table-responsive">
+            <div class="card-body">
+                <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>No</th>
-                                <th>Name</th>
-                                <th>Created by</th>
-                                <th>Action</th>
+                                <th>{{__('categoryitem.no')}}</th>
+                                <th>{{__('categoryitem.category_name')}}</th>
+                                <th>{{__('categoryitem.created_by')}}</th>
+                                <th>{{__('categoryitem.action')}}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -25,15 +25,14 @@
                                     <td>{{$item->name}}</td>
                                     <td>{{optional($item->createdBy)->name}}</td>
                                     <td>
-                                        <a href="{{ route('categoryitem.edit', $item->id) }}" class="btn btn-warning mb-1">Edit</a>
+                                        <a href="{{ route('categoryitem.edit', $item->id) }}" class="btn btn-warning mb-1">{{__('categoryitem.edit')}}</a>
                                         <form action="{{ route('categoryitem.destroy', $item->id) }}" method="POST" style="display:inline-block;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger mb-1">Delete</button>
+                                            <button type="submit" class="btn btn-danger mb-1">{{__('categoryitem.delete')}}</button>
                                         </form>
                                     </td>
                                 </tr>
-
                             @endforeach
                         </tbody>
                     </table>

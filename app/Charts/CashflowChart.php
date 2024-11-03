@@ -50,7 +50,12 @@ class CashflowChart
         return $this->chart->lineChart()
             ->setTitle('Monthly Cashflow')
             ->setHeight(300)
-            ->addData('Net Cashflow', $monthlyTotals)  // Net cashflow per month
-            ->setXAxis($months);  // Months for the X-axis
+            ->addData('Net Cashflow', $monthlyTotals)
+            ->setGrid()
+     
+            ->setXAxis($months);
+
+
+
     }
 }

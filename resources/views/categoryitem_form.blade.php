@@ -12,19 +12,15 @@
             ]) !!}
 
             <div class="form-group">
-                {!! Form::label('name', 'Category Name') !!}
+                {!! Form::label('name', __('categoryitem.category_name')) !!}
                 {!! Form::text('name', null, ['class' => 'form-control mb-3', 'required']) !!}
                 <span class="text-danger">{!! $errors->first('name') !!}</span>
             </div>
 
-           
-            
-            {!! Form::submit('Save', ['class' => 'btn btn-success']) !!}
+            {!! Form::submit(__('categoryitem.save'), ['class' => 'btn btn-success']) !!}
 
             {!! Form::close() !!}
-
         </div>
     </div>
 </div>
-
 @endsection

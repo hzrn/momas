@@ -3,20 +3,21 @@
 @section('content')
 
     <h1 class="h3 mb-3">{{$title}}</h1>
-    <a href="{{ route('profile.create') }}" class="btn btn-primary mb-3">Add {{$title}}</a>
+    <a href="{{ route('profile.create') }}" class="btn btn-primary mb-3">{{__('profile.add')}}</a>
+    <a href="{{ route('profile.exportPDF', request()->all()) }}" class="btn btn-secondary mb-3 d-none">{{__('profile.export_pdf')}}</a>
 
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
-            <table class="table table-striped">
+            <table id="profile-table" class="table table-striped">
                 <thead>
                     <tr>
-                        <th>No</th>
+                        <th>{{__('profile.no')}}</th>
                         <th class="d-none">Mosque ID</th>
-                        <th>Title</th>
-                        <th>Category</th>
-                        <th>Content</th>
-                        <th>Actions</th>
+                        <th>{{__('profile.title')}}</th>
+                        <th>{{__('profile.category')}}</th>
+                        <th>{{__('profile.content')}}</th>
+                        <th>{{__('profile.action')}}</th>
 
                     </tr>
                 </thead>
@@ -26,15 +27,15 @@
                         <td>{{ $loop->iteration }}</td>
                         <td class="d-none">{{ $item->mosque_id }}</td>
                         <td>{{ $item->title }}</td>
-                        <td>{{ $item->category }}</td>
-                        <td>{{ $item->content }}</td>
+                        <td>{{ __('profile.' . strtolower($item->category)) }}</td>
+                        <td>{!! nl2br(e($item->content)) !!}</td>
                         <td>
-                            <a href="{{ route('profile.show', $item->id) }}" class="btn btn-secondary mb-1">Details</a>
-                            <a href="{{ route('profile.edit', $item->id) }}" class="btn btn-warning mb-1">Edit</a>
+                            <a href="{{ route('profile.show', $item->id) }}" class="btn btn-secondary mb-1">{{__('profile.details')}}</a>
+                            <a href="{{ route('profile.edit', $item->id) }}" class="btn btn-warning mb-1">{{__('profile.edit')}}</a>
                             <form action="{{ route('profile.destroy', $item->id) }}" method="POST" style="display:inline-block;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger mb-1">Delete</button>
+                                <button type="submit" class="btn btn-danger mb-1">{{__('profile.delete')}}</button>
                             </form>
                         </td>
                     </tr>
@@ -45,5 +46,25 @@
     </div>
     </div>
 
-{{ $profile->links() }}
+    <script>
+        $(document).ready(function() {
+            $('#profile-table').DataTable({
+                "paging": false,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "responsive": true,
+                columnDefs: [
+                    { orderable: false, targets: 5 }
+                ],
+                "language": {
+                    "url": "{{ app()->getLocale() === 'ms' ? 'https://cdn.datatables.net/plug-ins/1.13.5/i18n/ms.json' : 'https://cdn.datatables.net/plug-ins/1.13.5/i18n/en-GB.json' }}"
+                }
+            });
+        });
+    </script>
+
+
+
 @endsection

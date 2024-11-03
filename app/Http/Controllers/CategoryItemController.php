@@ -13,7 +13,7 @@ class CategoryItemController extends Controller
     public function index()
     {
         $categoryitem = CategoryItem::MosqueUser()->latest()->paginate(10);
-        $title = 'Category Item';
+        $title = __('categoryitem.title');
         return view('categoryitem_index', compact('categoryitem', 'title'));
     }
 
@@ -23,7 +23,7 @@ class CategoryItemController extends Controller
     public function create()
     {
         $categoryitem = new CategoryItem();
-        $title = 'Category Item Form';
+        $title = __('categoryitem.form_title');
         return view('categoryitem_form', compact('categoryitem', 'title'));
     }
 
@@ -34,12 +34,11 @@ class CategoryItemController extends Controller
     {
         $requestData = $request->validate([
             'name' => 'required',
-            
         ]);
 
         $categoryitem = CategoryItem::create($requestData);
-        flash('Data saved successfully')->success();
-        return redirect()->route('categoryitem.index')->with('success', 'Data saved successfully');
+        flash(__('categoryitem.saved'))->success();
+        return redirect()->route('categoryitem.index');
     }
 
     /**
@@ -48,8 +47,8 @@ class CategoryItemController extends Controller
     public function show($id)
     {
         $categoryitem = CategoryItem::findOrFail($id);
-        $title = 'Category Item';
-        return view('categoryitem_form', compact('categoryitem'));
+        $title = __('categoryitem.title');
+        return view('categoryitem_form', compact('categoryitem', 'title'));
     }
 
     /**
@@ -58,7 +57,7 @@ class CategoryItemController extends Controller
     public function edit($id)
     {
         $categoryitem = CategoryItem::findOrFail($id);
-        $title = 'Category Item Edit';
+        $title = __('categoryitem.edit_title');
         return view('categoryitem_form', compact('categoryitem', 'title'));
     }
 
@@ -71,14 +70,11 @@ class CategoryItemController extends Controller
 
         $validatedData = $request->validate([
             'name' => 'required',
-            
         ]);
 
         $categoryitem->update($validatedData);
-
-        flash('Data updated successfully')->success();
-
-        return redirect()->route('categoryitem.index')->with('success', 'Data updated successfully');
+        flash(__('categoryitem.updated'))->success();
+        return redirect()->route('categoryitem.index');
     }
 
     /**
@@ -88,9 +84,7 @@ class CategoryItemController extends Controller
     {
         $categoryitem = CategoryItem::findOrFail($id);
         $categoryitem->delete();
-
-        flash('Data deleted successfully')->success();
-
-        return redirect()->route('categoryitem.index')->with('success', 'Data deleted successfully');
+        flash(__('categoryitem.deleted'))->success();
+        return redirect()->route('categoryitem.index');
     }
 }

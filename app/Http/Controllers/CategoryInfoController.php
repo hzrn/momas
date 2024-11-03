@@ -16,9 +16,9 @@ class CategoryInfoController extends Controller
     public function index()
     {
         $categoryinfo = CategoryInfo::MosqueUser()->latest()->paginate(10);
-        $title = 'Category Info';
+        $title = __('categoryinfo.title');
         return view('categoryinfo_index', compact('categoryinfo', 'title'));
-        
+
     }
 
     /**
@@ -27,7 +27,7 @@ class CategoryInfoController extends Controller
     public function create()
     {
         $categoryinfo = new CategoryInfo();
-        $title = 'Category Info Form';
+        $title = __('categoryinfo.form_title');
         return view('categoryinfo_form', compact('categoryinfo', 'title'));
     }
 
@@ -42,28 +42,28 @@ class CategoryInfoController extends Controller
         ]);
 
         $categoryinfo = CategoryInfo::create($requestData);
-        flash('Data saved successfully')->success();
-        return redirect()->route('categoryinfo.index')->with('success', 'Data saved successfully');
+        flash(__('categoryinfo.saved'))->success();
+        return redirect()->route('categoryinfo.index');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show($id)
-    {
-        $categoryinfo = CategoryInfo::findOrFail($id);
-        $title = 'Category Info';
-        return view('categoryinfo_form', compact('categoryinfo'));
-    }
+    // public function show($id)
+    // {
+    //     $categoryinfo = CategoryInfo::findOrFail($id);
+    //     $title = 'Category Info';
+    //     return view('categoryinfo_form', compact('categoryinfo'));
+    // }
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit($id)
     {
-        
+
         $categoryinfo = CategoryInfo::findOrFail($id);
-        $title = 'Category Info Edit';
+        $title = __('categoryinfo.edit_title');
         return view('categoryinfo_form', compact('categoryinfo', 'title'));
 
     }
@@ -82,9 +82,9 @@ class CategoryInfoController extends Controller
 
         $categoryinfo->update($validatedData);
 
-        flash('Data updated successfully')->success();
+        flash(__('categoryinfo.updated'))->success();
 
-        return redirect()->route('categoryinfo.index')->with('success', 'Data updated successfully');
+        return redirect()->route('categoryinfo.index');
     }
 
     /**
@@ -95,8 +95,8 @@ class CategoryInfoController extends Controller
         $categoryinfo = CategoryInfo::findOrFail($id);
         $categoryinfo->delete();
 
-        flash('Data deleted successfully')->success();
+        flash(__('categoryinfo.deleted'))->success();
 
-        return redirect()->route('categoryinfo.index')->with('success', 'Data deleted successfully');
+        return redirect()->route('categoryinfo.index');
     }
 }

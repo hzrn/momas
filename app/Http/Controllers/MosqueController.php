@@ -24,12 +24,11 @@ class MosqueController extends Controller
      */
     public function create()
     {
-
         $mosque = auth()->user()->mosque;
         $mosque = $mosque ?? new Mosque();
-        return view('mosque_form',[
+        return view('mosque_form', [
             'mosque' => $mosque,
-            'title' => 'Mosque Form',
+            'title' => __('mosque.form_title'),
         ]);
     }
 
@@ -38,31 +37,35 @@ class MosqueController extends Controller
      */
     public function store(Request $request)
     {
+        // Validate the input data
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'address' => 'required|string|max:500',
-            'phone_num' => 'required|numeric',  // You can adjust min/max validation rules as needed
-            'email' => 'required|email|max:255',
+            'phone_num' => 'required|numeric', // Ensure phone number is numeric
+            'email' => 'required|email|max:255', // Ensure valid email format
         ]);
 
-        // Retrieve the current authenticated user
+        // Retrieve the authenticated user's mosque or create a new instance
+        $mosque = auth()->user()->mosque ?? new Mosque();
+
+        // Assign validated data to the mosque
+        $mosque->name = $data['name'];
+        $mosque->address = $data['address'];
+        $mosque->phone_num = $data['phone_num'];
+        $mosque->email = $data['email'];
+        $mosque->save();
+
+        // Associate the mosque with the user
         $user = auth()->user();
+        $user->mosque_id = $mosque->id;
+        $user->save();
 
-        // Use updateOrCreate to handle the mosque creation or update in a single step
-        $mosque = Mosque::updateOrCreate(
-            ['id' => $user->mosque_id], // If user already has a mosque, update it
-            $data                         // Use validated data to update or create a mosque
-        );
+        // Flash success message
+        flash(__('mosque.saved'))->success();
 
-        // Update the user's mosque_id if it's a new mosque
-        if (!$user->mosque_id) {
-            $user->update(['mosque_id' => $mosque->id]);
-        }
-
-        flash('Data saved successfully')->success();
-        return back();
+        // Redirect back to the form with success message
+        return redirect()->route('mosque.create');
     }
-
 
     /**
      * Display the specified resource.
