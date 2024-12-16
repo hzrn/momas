@@ -19,7 +19,7 @@
                     </tr>
                     <tr>
                         <td><strong>{{__('profile.content')}}:</strong></td>
-                        <td>{{ $profile->content }} ?? '-' </td>
+                        <td>{{ $profile->content ?? '-' }}</td> <!-- Added ?? '-' for handling null -->
                     </tr>
                     <tr>
                         <td><strong>{{__('profile.created_by')}}:</strong></td>
@@ -32,7 +32,7 @@
 
                     <tr>
                         <td><strong>{{__('profile.created_at')}}:</strong></td>
-                        <td>{{ $profile->created_at->format('d-m-Y H:i') }}</td>
+                        <td>{!! formatDate($profile->created_at) !!}</td> <!-- Applying formatDate for created_at -->
                     </tr>
                     <tr>
                         <td><strong>{{__('profile.updated_at')}}:</strong></td>
@@ -40,7 +40,7 @@
                             @if ($profile->created_at->eq($profile->updated_at))
                                 -
                             @else
-                                {{ $profile->updated_at->format('d-m-Y H:i') }}
+                                {!! formatDate($profile->updated_at) !!} <!-- Applying formatDate for updated_at -->
                             @endif
                         </td>
                     </tr>

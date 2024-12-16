@@ -9,14 +9,15 @@
         "arielmejiadev/larapex-charts": "^8.1",
         "barryvdh/laravel-dompdf": "^3.0",
         "graham-campbell/markdown": "^15.2",
-        "guzzlehttp/guzzle": "^7.2",
+        "guzzlehttp/guzzle": "^7.8",
         "laracasts/flash": "^3.2",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.5",
         "laravelcollective/html": "^6.4",
-        "league/commonmark": "^2.5"
+        "league/commonmark": "^2.5",
+        "mckenziearts/laravel-notify": "^2.5"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.13",

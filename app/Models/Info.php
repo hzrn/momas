@@ -13,7 +13,7 @@ class Info extends Model
 
     use HasMosque, HasCreatedBy, HasFactory, HasUpdatedBy;
 
-    protected $fillable = ['mosque_id', 'category_info_id', 'title', 'date', 'content', 'photo', 'created_by', 'updated_by'];
+    protected $fillable = ['mosque_id', 'category_info_id', 'title', 'date', 'description', 'reminder_date', 'photo', 'created_by', 'updated_by'];
 
 
     public function category()

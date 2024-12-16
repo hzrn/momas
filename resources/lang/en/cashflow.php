@@ -75,35 +75,38 @@ return [
     //other
     'no_mosque' => 'No mosque assigned.',
 
+    //analysis
+    'analysis_title' => 'Cashflow Analysis',
+    'select_year' => 'Select Year',
+    'yearly_cashflow_analysis' => 'Yearly Cashflow Analysis',
+    'select_month' => 'Select Month',
+    'daily_cashflow_analysis' => 'Daily Cashflow Analysis',
+    'daily_cashflow' => "Daily Cashflow",
 
+    //months name
+    '01' => 'January',
+    '02' => 'February',
+    '03' => 'March',
+    '04' => 'April',
+    '05' => 'May',
+    '06' => 'June',
+    '07' => 'July',
+    '08' => 'August',
+    '09' => 'September',
+    '10' => 'October',
+    '11' => 'November',
+    '12' => 'December',
+    'all_months' => 'All Months',
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    //new translations for chart and summary
+    'income_vs_expenses_by_category' => 'Income vs Expenses by Category',
+    'yearly_income_vs_expenses' => 'Yearly Income vs Expenses',
+    'summary' => 'Summary',
+    'yearly_summary' => 'Yearly Summary',
+    'net_cashflow' => 'Net Cashflow',
+    'category_breakdown' => 'Category Breakdown',
+    'income_categories' => 'Donations/Income Categories',
+    'expenses_categories' => 'Expenses Categories',
+    'currency' => 'RM'
+    
 ];

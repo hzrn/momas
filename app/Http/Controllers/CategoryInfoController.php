@@ -15,7 +15,7 @@ class CategoryInfoController extends Controller
      */
     public function index()
     {
-        $categoryinfo = CategoryInfo::MosqueUser()->latest()->paginate(10);
+        $categoryinfo = CategoryInfo::MosqueUser()->orderBy('created_at', 'desc')->get();;
         $title = __('categoryinfo.title');
         return view('categoryinfo_index', compact('categoryinfo', 'title'));
 

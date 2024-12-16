@@ -1,20 +1,24 @@
 <?php
 
-use App\Http\Controllers\CashflowController;
-use App\Http\Controllers\CategoryInfoController;
-use App\Http\Controllers\CategoryItemController;
-use App\Http\Controllers\CommitteeController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\InfoController;
-use App\Http\Controllers\ItemController;
-use App\Http\Controllers\MosqueController;
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\EnsureMosqueDataCompleted;
-use App\Http\Controllers\UserProfileController;
-use App\Models\Info;
 
+// Import Controllers
+use App\Http\Controllers\{
+    CashflowController,
+    CategoryInfoController,
+    CategoryItemController,
+    CommitteeController,
+    HomeController,
+    InfoController,
+    ItemController,
+    MosqueController,
+    ProfileController,
+    UserProfileController
+};
+
+// Import Middleware
+use App\Http\Middleware\EnsureMosqueDataCompleted;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,7 +31,11 @@ use App\Models\Info;
 |
 */
 
-// Language switching route
+// Public Routes
+Route::get('/', function () {
+    return view('welcome');
+});
+
 Route::get('lang/{locale}', function ($locale) {
     session(['app_locale' => $locale]);
     return redirect()->back();
@@ -38,34 +46,70 @@ Route::get('logout-user', function () {
     return redirect('/');
 })->name('logout-user');
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
+// Authentication Routes
 Auth::routes();
 
+// Authenticated Routes
 Route::middleware(['auth'])->group(function () {
 
+    // Mosque Routes
     Route::resource('mosque', MosqueController::class);
 
-     Route::middleware(EnsureMosqueDataCompleted::class)->group(function () {
+    // Routes that require Mosque data to be completed
+    Route::middleware(EnsureMosqueDataCompleted::class)->group(function () {
+
+        // Home
         Route::get('/home', [HomeController::class, 'index'])->name('home');
-        Route::get('/cashflow/export-pdf', [CashflowController::class, 'exportPDF'])->name('cashflow.exportPDF');
+
+        // Cashflow
+        Route::prefix('cashflow')->name('cashflow.')->group(function () {
+            Route::get('/export-pdf', [CashflowController::class, 'exportPDF'])->name('exportPDF');
+            Route::get('/analysis', [CashflowController::class, 'cashflowAnalysis'])->name('analysis');
+            Route::get('/line-chart', [CashflowController::class, 'getLineChart'])->name('linechart');
+            Route::get('/daily', [CashflowController::class, 'getDailyCashflow'])->name('getDailyCashflow');
+            Route::get('/piechart', [CashflowController::class, 'getPieChart'])->name('piechart');
+        });
         Route::resource('cashflow', CashflowController::class);
-        Route::get('/info/export-pdf', [InfoController::class, 'exportPDF'])->name('info.exportPDF');
+
+        // Info
+        Route::prefix('info')->name('info.')->group(function () {
+            // Route::get('/reminders', [InfoController::class, 'showReminders'])->name('reminders.index');
+            Route::get('/export-pdf', [InfoController::class, 'exportPDF'])->name('exportPDF');
+            Route::get('/analysis', [InfoController::class, 'infoAnalysis'])->name('analysis');
+            Route::get('/piechart', [InfoController::class, 'fetchPieChartData'])->name('piechart');
+            Route::get('/linechart', [InfoController::class, 'lineChart'])->name('linechart');
+        });
+        Route::post('/reminders/remove-all', [InfoController::class, 'removeAll'])->name('reminders.removeAll');
         Route::resource('info', InfoController::class);
-        Route::resource('userprofile', UserProfileController::class);
-        Route::get('/profile/export-pdf', [ProfileController::class, 'exportPDF'])->name('profile.exportPDF');
+
+        // Profile
+        Route::prefix('profile')->name('profile.')->group(function () {
+            Route::get('/export-pdf', [ProfileController::class, 'exportPDF'])->name('exportPDF');
+        });
         Route::resource('profile', ProfileController::class);
+
+        // User Profile
+        Route::resource('userprofile', UserProfileController::class);
+
+        // Category Info
         Route::resource('categoryinfo', CategoryInfoController::class);
+
+        // Category Item
         Route::resource('categoryitem', CategoryItemController::class);
-        Route::get('/item/export-pdf', [ItemController::class, 'exportPDF'])->name('item.exportPDF');
+
+        // Item
+        Route::prefix('item')->name('item.')->group(function () {
+            Route::get('/export-pdf', [ItemController::class, 'exportPDF'])->name('exportPDF');
+            Route::get('/analysis', [ItemController::class, 'itemAnalysis'])->name('analysis');
+            Route::get('/piechart', [ItemController::class, 'fetchPieChartData'])->name('piechart');
+            Route::get('/linechart', [ItemController::class, 'lineChart'])->name('linechart');
+        });
         Route::resource('item', ItemController::class);
-        Route::get('/committee/export-pdf', [CommitteeController::class, 'exportPDF'])->name('committee.exportPDF');
+
+        // Committee
+        Route::prefix('committee')->name('committee.')->group(function () {
+            Route::get('/export-pdf', [CommitteeController::class, 'exportPDF'])->name('exportPDF');
+        });
         Route::resource('committee', CommitteeController::class);
-
-
-
-
     });
 });

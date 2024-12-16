@@ -32,7 +32,6 @@
                     <tr>
                         <td><strong>{{__('item.photo')}}:</strong></td>
                         <td>
-
                             @if ($item->photo)
                                 <!-- Clickable image to open the modal -->
                                 <img src="{{ asset('storage/items/' . $item->photo) }}"
@@ -43,8 +42,7 @@
                             @else
                                 -
                             @endif
-
-                    </td>
+                        </td>
                     </tr>
                     <tr>
                         <td><strong>{{__('item.created_by')}}:</strong></td>
@@ -56,7 +54,7 @@
                     </tr>
                     <tr>
                         <td><strong>{{__('item.created_at')}}:</strong></td>
-                        <td>{{ $item->created_at->format('d-m-Y H:i') }}</td>
+                        <td>{!! formatDate($item->created_at) !!}</td> <!-- Applying formatDate for created_at -->
                     </tr>
                     <tr>
                         <td><strong>{{__('item.updated_at')}}:</strong></td>
@@ -64,7 +62,7 @@
                             @if ($item->created_at->eq($item->updated_at))
                                 -
                             @else
-                                {{ $item->updated_at->format('d-m-Y H:i') }}
+                                {!! formatDate($item->updated_at) !!} <!-- Applying formatDate for updated_at -->
                             @endif
                         </td>
                     </tr>
@@ -87,6 +85,5 @@
             </div>
         </div>
     </div>
-
 
 @endsection

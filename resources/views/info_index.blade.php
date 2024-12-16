@@ -2,6 +2,7 @@
 
 @section('content')
 <h1 class="h3 mb-3">{{ $title }}</h1>
+
 <a href="{{ route('info.create') }}" class="btn btn-primary mb-3">{{ __('info.add') }}</a>
 <a href="{{ route('info.exportPDF', request()->all()) }}" class="btn btn-secondary mb-3">{{ __('info.export_pdf') }}</a>
 
@@ -25,18 +26,18 @@
                         <tbody>
                             @foreach ($info as $item)
                                 @php
-                                    $formattedDate = \Carbon\Carbon::parse($item->date)->format('d M Y, H:i');
+                                    $formattedDate = formatDate($item->date); // Using the helper here
                                     $message = __('info.title') . ": {$item->title}\n" .
                                                __('info.date') . ": $formattedDate\n" .
-                                               __('info.description') . ": " . ($item->content ?? __('info.no_content'));
+                                               __('info.description') . ": " . ($item->description ?? __('info.no_description'));
                                     $whatsappLink = "https://wa.me/send?text=" . urlencode($message);
                                 @endphp
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $item->title }}</td>
                                     <td>{{ $item->category->name ?? 'N/A' }}</td>
-                                    <td>{{ $item->date }}</td>
-                                    <td>{!! nl2br(e($item->content ?? '-')) !!}</td>
+                                    <td>{!! $formattedDate !!}</td> <!-- Using formattedDate -->
+                                    <td>{!! nl2br(e($item->description ?? '-')) !!}</td>
 
                                     <td>
                                         @if($item->photo)

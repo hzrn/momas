@@ -43,6 +43,8 @@ class MosqueController extends Controller
             'address' => 'required|string|max:500',
             'phone_num' => 'required|numeric', // Ensure phone number is numeric
             'email' => 'required|email|max:255', // Ensure valid email format
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
         ]);
 
         // Retrieve the authenticated user's mosque or create a new instance
@@ -53,6 +55,8 @@ class MosqueController extends Controller
         $mosque->address = $data['address'];
         $mosque->phone_num = $data['phone_num'];
         $mosque->email = $data['email'];
+        $mosque->latitude = $data['latitude'];
+        $mosque->longitude = $data['longitude'];
         $mosque->save();
 
         // Associate the mosque with the user

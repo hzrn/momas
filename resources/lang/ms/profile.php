@@ -18,7 +18,7 @@ return [
     //table
     'no' => 'Bil',
     'category' => 'Kategori',
-    'content' => 'Konten',
+    'content' => 'Penerangan',
     'action' => 'Tindakan',
 
     //form

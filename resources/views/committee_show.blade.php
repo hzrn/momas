@@ -28,7 +28,6 @@
                     <tr>
                         <td><strong>{{ __('committee.photo') }}:</strong></td>
                         <td>
-
                             @if ($committee->photo)
                                 <!-- Clickable image to open the modal -->
                                 <img src="{{ asset('storage/committees/' . $committee->photo) }}"
@@ -39,8 +38,7 @@
                             @else
                                 -
                             @endif
-
-                    </td>
+                        </td>
                     </tr>
                     <tr>
                         <td><strong>{{ __('committee.created_by') }}:</strong></td>
@@ -52,7 +50,7 @@
                     </tr>
                     <tr>
                         <td><strong>{{ __('committee.created_at') }}:</strong></td>
-                        <td>{{ $committee->created_at->format('d-m-Y H:i') }}</td>
+                        <td>{!! formatDate($committee->created_at) !!}</td> <!-- Applying formatDate for created_at -->
                     </tr>
                     <tr>
                         <td><strong>{{ __('committee.updated_at') }}:</strong></td>
@@ -60,7 +58,7 @@
                             @if ($committee->created_at->eq($committee->updated_at))
                                 {{ __('committee.not_updated') }}
                             @else
-                                {{ $committee->updated_at->format('d-m-Y H:i') }}
+                                {!! formatDate($committee->updated_at) !!} <!-- Applying formatDate for updated_at -->
                             @endif
                         </td>
                     </tr>

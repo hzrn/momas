@@ -19,7 +19,7 @@
                     </tr>
                     <tr>
                         <td><strong>{{ __('info.date') }}:</strong></td>
-                        <td>{{ $info->date }}</td>
+                        <td>{!! formatDate($info->date) !!}</td>  <!-- Apply formatDate helper here -->
                     </tr>
                     <tr>
                         <td><strong>{{ __('info.description') }}:</strong></td>
@@ -28,18 +28,16 @@
                     <tr>
                         <td><strong>{{ __('info.photo') }}:</strong></td>
                         <td>
-
-                                @if ($info->photo)
-                                    <!-- Clickable image to open the modal -->
-                                    <img src="{{ asset('storage/infos/' . $info->photo) }}"
-                                         alt="{{ $info->name }}"
-                                         width="100" height="100"
-                                         data-bs-toggle="modal" data-bs-target="#photoModal"
-                                         style="cursor: pointer;">
-                                @else
-                                    -
-                                @endif
-
+                            @if ($info->photo)
+                                <!-- Clickable image to open the modal -->
+                                <img src="{{ asset('storage/infos/' . $info->photo) }}"
+                                     alt="{{ $info->name }}"
+                                     width="100" height="100"
+                                     data-bs-toggle="modal" data-bs-target="#photoModal"
+                                     style="cursor: pointer;">
+                            @else
+                                -
+                            @endif
                         </td>
                     </tr>
                     <tr>
@@ -53,7 +51,7 @@
 
                     <tr>
                         <td><strong>{{ __('info.created_at') }}:</strong></td>
-                        <td>{{ $info->created_at->format('d-m-Y H:i') }}</td>
+                        <td>{!! formatDate($info->created_at) !!}</td> <!-- Apply formatDate helper here -->
                     </tr>
                     <tr>
                         <td><strong>{{ __('info.updated_at') }}:</strong></td>
@@ -61,7 +59,7 @@
                             @if ($info->created_at->eq($info->updated_at))
                                 -
                             @else
-                                {{ $info->updated_at->format('d-m-Y H:i') }}
+                                {!! formatDate($info->updated_at) !!} <!-- Apply formatDate helper here -->
                             @endif
                         </td>
                     </tr>
@@ -70,10 +68,6 @@
             </table>
 
             <a href="{{ route('info.index') }}" class="btn btn-secondary mt-3">{{ __('info.back_to_list') }}</a>
-
-            
-
-
 
         </div>
     </div>

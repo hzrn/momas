@@ -56,4 +56,14 @@ return [
     'confirm_delete' => 'Adakah anda pasti?',
     'no_mosque' => 'Tiada masjid ditetapkan.',
 
+    'analysis_title' => 'Analisis Inventori',
+    'select_year' => 'Pilih Tahun',
+    'select_month' => 'Pilih Bulan',
+    'yearly_item_analysis' => 'Analisis Inventori Tahunan',
+    'total_info' => 'Jumlah Inventori',
+    'category_distribution' => 'Pengagihan Kategori',
+    'summary' => 'Ringkasan',
+    'all_months' => 'Semua Bulan',
+    'total_item' => 'Jumlah Inventori',
+
 ];

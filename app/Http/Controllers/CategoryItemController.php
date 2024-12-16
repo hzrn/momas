@@ -12,7 +12,7 @@ class CategoryItemController extends Controller
      */
     public function index()
     {
-        $categoryitem = CategoryItem::MosqueUser()->latest()->paginate(10);
+        $categoryitem = CategoryItem::MosqueUser()->orderBy('created_at', 'desc')->get();;
         $title = __('categoryitem.title');
         return view('categoryitem_index', compact('categoryitem', 'title'));
     }

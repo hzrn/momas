@@ -8,32 +8,40 @@ class UserProfileController extends Controller
 {
     public function edit($id)
     {
-        return view('userprofile_edit');
+        $title = __('user_profile.title'); // Fetch the translated title
+        return view('userprofile_edit', compact('title')); // Pass the title to the view
     }
+
 
     public function update(Request $request, $id)
-{
-    $request->validate([
-        'name' => 'required',
-        'email' => 'required|email',
-        'password' => 'nullable',
-    ]);
+    {
+        // Validate the input fields, including password confirmation
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,' . auth()->id(),
+            'password' => 'nullable|confirmed', // Ensures the password and confirmation match
+        ]);
 
-    $data = [];
+        // Prepare the data to be updated
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+        ];
 
-    if ($request->password != '') {
-        $data['password'] = bcrypt($request->password);
+        // Check if the password is provided and encrypt it
+        if (!empty($request->password)) {
+            $data['password'] = bcrypt($request->password);
+        }
+
+        // Update the user data
+        $user = auth()->user();
+        $user->fill($data);
+        $user->save();
+
+        // Flash success message
+        flash(__('cashflow.saved'))->success();
+
+        // Redirect back to the profile edit page
+        return back();
     }
-
-    $data['name'] = $request->name;
-    $data['email'] = $request->email;
-
-    $user = auth()->user();
-    $user->fill($data);
-    $user->save();
-
-    flash('Data saved successfully')->success();
-
-    return back();
-}
 }

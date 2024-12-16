@@ -31,14 +31,21 @@
             </div>
 
             <div class="form-group">
-                {!! Form::label('content',  __('info.description') ) !!}
-                {!! Form::textarea('content', null, ['class' => 'form-control mb-3']) !!}
-                <span class="text-danger">{!! $errors->first('content') !!}</span>
+                {!! Form::label('description',  __('info.description') ) !!}
+                {!! Form::textarea('description', null, ['class' => 'form-control mb-3']) !!}
+                <span class="text-danger">{!! $errors->first('description') !!}</span>
             </div>
+
+            <div class="form-group">
+                {!! Form::label('reminder_date', __('info.reminder_date')) !!}
+                {!! Form::input('date', 'reminder_date', $info->reminder_date ? \Carbon\Carbon::parse($info->reminder_date)->format('Y-m-d') : null, ['class' => 'form-control mb-3']) !!}
+                <span class="text-danger">{!! $errors->first('reminder_date') !!}</span>
+            </div>
+
 
             <!-- Image Upload Field -->
             <div class="form-group mb-3">
-                <label for="photo">{{ __('info.photo') }}</label>
+                <label for="photo">{{ __('info.photo') }} (Format : JPEG, JPG, PNG)</label>
                 <div class="custom-file-input-wrapper">
                     <input type="file" name="photo" id="photo" accept="image/*" class="d-none">
                     <button type="button" class="btn btn-secondary" id="choose-file-button">

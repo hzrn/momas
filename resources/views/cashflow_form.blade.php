@@ -52,7 +52,7 @@
 
             <!-- Image Upload Field -->
             <div class="form-group mb-3">
-                <label for="photo">{{ __('cashflow.photo') }}</label>
+                <label for="photo">{{ __('cashflow.photo') }} (Format : JPEG, JPG, PNG)</label>
                 <div class="custom-file-input-wrapper">
                     <input type="file" name="photo" id="photo" accept="image/*" class="d-none">
                     <button type="button" class="btn btn-secondary" id="choose-file-button">

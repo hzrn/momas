@@ -55,5 +55,11 @@ class User extends Authenticatable
         return $this->belongsTo(Mosque::class);
     }
 
+    public function isAdmin()
+{
+    return $this->role === 'mosque_admin'; // Adjust based on your role management
+}
+
+
 
 }

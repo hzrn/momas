@@ -29,6 +29,7 @@ return [
     'choose_file' => 'Pilih Fail',
     'no_file' => 'Tiada fail dimuat naik',
     'save' => 'Simpan',
+    'reminder_date' => 'Tarikh Pemberitahuan',
 
     //details
     'created_by' => 'Dicipta oleh',
@@ -48,6 +49,18 @@ return [
     //other
     'no_mosque' => 'Tiada masjid ditetapkan.',
     'share_whatsapp' => 'Sebar',
-    'no_content' => 'Tiada Konten Tambahan'
+    'no_description' => 'Tiada Konten Tambahan',
+    'event_reminder' => "Peringatan: Acara ':title' dijadualkan pada :date.",
+
+    //analysis
+    'analysis_title' => 'Analisis Maklumat',
+    'select_year' => 'Pilih Tahun',
+    'select_month' => 'Pilih Bulan',
+    'yearly_info_analysis' => 'Analisis Maklumat Tahunan',
+    'total_info' => 'Jumlah Maklumat',
+    'category_distribution' => 'Pengagihan Kategori',
+    'summary' => 'Ringkasan',
+    'all_months' => 'Semua Bulan',
+
 
 ];

@@ -11,7 +11,7 @@
                 <tbody>
                     <tr>
                         <td><strong>{{ __('cashflow.date') }}:</strong></td>
-                        <td>{{ $cashflow->date }}</td>
+                        <td>{!! formatDate($cashflow->date) !!}</td> <!-- Applying formatDate here -->
                     </tr>
                     <tr>
                         <td><strong>{{ __('cashflow.category') }}:</strong></td>
@@ -63,7 +63,7 @@
                     </tr>
                     <tr>
                         <td><strong>{{ __('cashflow.created_at') }}:</strong></td>
-                        <td>{{ $cashflow->created_at->format('d-m-Y H:i') }}</td>
+                        <td>{!! formatDate($cashflow->created_at) !!}</td> <!-- Formatting created_at here -->
                     </tr>
                     <tr>
                         <td><strong>{{ __('cashflow.updated_at') }}:</strong></td>
@@ -71,7 +71,7 @@
                             @if ($cashflow->created_at->eq($cashflow->updated_at))
                                 {{ __('cashflow.not_updated') }}
                             @else
-                                {{ $cashflow->updated_at->format('d-m-Y H:i') }}
+                                {!! formatDate($cashflow->updated_at) !!} <!-- Formatting updated_at here -->
                             @endif
                         </td>
                     </tr>

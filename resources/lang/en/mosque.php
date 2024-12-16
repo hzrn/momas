@@ -32,7 +32,12 @@ return [
     'choose_file' => 'Choose File',
     'no_file' => 'No file uploaded',
     'save' => 'Save',
+    'location' => 'Location',
+    'select_location' => 'Choose Location',
     'fill' => 'Fill the mosque form as required',
+    'save_location' => 'Save location',
+    'close' => 'Close',
+    'no_location_selected' => 'No location selected',
 
     //details
     'created_by' => 'Created by',
@@ -53,5 +58,6 @@ return [
 
     //other
     'no_mosque' => 'No mosque assigned.',
+
 
 ];

@@ -54,6 +54,16 @@ return [
 
     //other
     'confirm_delete' => 'Are you sure?',
-    
+
+    'analysis_title' => 'Item Analysis',
+    'select_year' => 'Select Year',
+    'select_month' => 'Select Month',
+    'yearly_tem_analysis' => 'Yearly Item Analysis',
+    'total_info' => 'Total Items',
+    'category_distribution' => 'Category Distribution',
+    'summary' => 'Summary',
+    'all_months' => 'All Months',
+    'total_item' => 'Total Item',
+
 
 ];

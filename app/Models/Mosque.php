@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Mosque extends Model
 {
-    protected $fillable = ['name', 'address', 'phone_num', 'email', 'total_amount'];
+    protected $fillable = ['name', 'address', 'phone_num', 'email', 'total_amount', 'latitude', 'longitude'];
 
     public function cashflows()
     {
@@ -17,5 +17,5 @@ class Mosque extends Model
         return $this->hasMany(CategoryInfo::class);
     }
 
-    
+
 }

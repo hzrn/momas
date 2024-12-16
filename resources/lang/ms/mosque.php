@@ -30,8 +30,13 @@ return [
     'photo' => 'Gambar',
     'choose_file' => 'Pilih Fail',
     'no_file' => 'Tiada fail dimuat naik',
+    'location' => 'Lokasi',
+    'select_location' => 'Pilih Lokasi',
     'save' => 'Simpan',
     'fill' => 'Isi borang masjid seperti yang diperlukan',
+    'save_location' => 'Simpan Lokasi',
+    'close' => 'Tutup',
+    'no_location_selected' => 'Tiada lokasi dipilih',
 
 
     //details

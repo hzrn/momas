@@ -29,6 +29,7 @@ return [
     'choose_file' => 'Choose File',
     'no_file' => 'No file uploaded',
     'save' => 'Save',
+    'reminder_date' => 'Reminder Date',
 
     //details
     'created_by' => 'Created By',
@@ -48,6 +49,20 @@ return [
     //other
     'no_mosque' => 'No mosque assigned.',
     'share_whatsapp' => 'Share',
-    'no_content' => 'No Additional Content'
+    'no_description' => 'No Additional description',
+    'event_reminder' => "Reminder: The event ':title' is set for :date.",
+
+    //analysis
+    'analysis_title' => 'Information Analysis',
+    'select_year' => 'Select Year',
+    'select_month' => 'Select Month',
+    'yearly_info_analysis' => 'Yearly Information Analysis',
+    'total_info' => 'Total Information',
+    'category_distribution' => 'Category Distribution',
+    'summary' => 'Summary',
+    'all_months' => 'All Months',
+
+
+
 
 ];

@@ -22,9 +22,6 @@
 
     </form>
 
-
-
-
     <div class="card">
         <div class="card-body">
             <div class="table-responsive p-2">
@@ -44,10 +41,13 @@
                     </thead>
                     <tbody>
                         @foreach ($cashflow as $item)
+                        @php
+                        $formattedDate = formatDate($item->date);
+                        @endphp
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td class="d-none">{{ $item->mosque_id }}</td>
-                            <td>{{ $item->date->translatedFormat('d-m-Y') }}</td>
+                            <td>{!! $formattedDate !!}</td>
                             <td>{{ __('cashflow.' . strtolower($item->category)) }}</td>
                             <td>{{ $item->description ?? '-' }}</td>
                             <td>{{ $item->type == 'income' ? formatRM($item->amount) : '-' }}</td>
