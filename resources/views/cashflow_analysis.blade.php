@@ -26,7 +26,7 @@
                     <h5 class="card-title" id="lineChartTitle">{{ __('cashflow.yearly_cashflow_analysis') }}</h5>
                 </div>
                 <div class="card-body">
-                    <canvas id="lineChart" width="400" height="200"></canvas>
+                    <canvas id="lineChart"></canvas>
                 </div>
             </div>
         </div>
@@ -114,9 +114,11 @@
     <!-- Include Chart.js from CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <style>canvas {
-        width: 100% !important;
-        height: auto !important;
+    <style>
+        canvas {
+            width: 99% !important;
+            height: auto ;
+
     }</style>
 
     <script>

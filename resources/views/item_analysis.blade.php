@@ -78,7 +78,7 @@
     <style>
         /* Apply general styles to all canvas elements */
         canvas {
-            width: 100% !important;
+            width: 98% !important;
             height: auto !important;
         }
     </style>
