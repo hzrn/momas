@@ -33,7 +33,7 @@ use App\Http\Middleware\EnsureMosqueDataCompleted;
 
 // Public Routes
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.loginadminkit');
 });
 
 Route::get('lang/{locale}', function ($locale) {

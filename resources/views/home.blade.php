@@ -52,7 +52,7 @@
         <!-- Total Income Card -->
         <div class="col-4 d-flex">
             <!-- Card acts as button -->
-            <div class="card flex-fill" data-bs-toggle="modal" data-bs-target="#latestIncomeModal" style="cursor: pointer;">
+            <div class="card flex-fill hover-card" data-bs-toggle="modal" data-bs-target="#latestIncomeModal" style="cursor: pointer;">
                 <div class="card-body">
                     <div class="row">
                         <div class="col mt-0">
@@ -68,16 +68,17 @@
             </div>
         </div>
 
+
         <!-- Total Expenses Card -->
         <div class="col-4 d-flex">
-            <div class="card flex-fill" data-bs-toggle="modal" data-bs-target="#latestExpensesModal" style="cursor: pointer;">
+            <div class="card flex-fill hover-card" data-bs-toggle="modal" data-bs-target="#latestExpensesModal" style="cursor: pointer;">
                 <div class="card-body">
                     <div class="row">
                         <div class="col mt-0">
                             <h5 class="card-title">{{__('home.total_expenses')}}</h5>
                         </div>
                         <div class="col-auto">
-                            <i class="align-middle" data-feather="arrow-down-circle"></i>
+                            <i class="align-middle text-danger" data-feather="arrow-down-circle"></i>
                         </div>
                     </div>
                     <h1 class="mt-1 mb-3 text-danger">{{ formatRM($currentMonthExpenses) }}</h1>
@@ -96,7 +97,7 @@
                             <h5 class="card-title">{{__('home.total_net_amount')}}</h5>
                         </div>
                         <div class="col-auto">
-                            <i class="align-middle" data-feather="dollar-sign"></i>
+                            <i class="align-middle text-primary" data-feather="dollar-sign"></i>
                         </div>
                     </div>
                     <h1 class="mt-1 mb-3 text-primary">{{ formatRM($totalAmount) }}</h1>
@@ -113,7 +114,7 @@
     <div class="row">
         <!-- Total Committees Card -->
         <div class="col-4 d-flex">
-            <div class="card flex-fill" data-bs-toggle="modal" data-bs-target="#latestCommitteeModal" style="cursor: pointer;">
+            <div class="card flex-fill hover-card" data-bs-toggle="modal" data-bs-target="#latestCommitteeModal" style="cursor: pointer;">
                 <div class="card-body">
                     <div class="row">
                         <div class="col mt-0">
@@ -131,7 +132,7 @@
 
         <!-- Total Information Card -->
         <div class="col-4 d-flex">
-            <div class="card flex-fill" data-bs-toggle="modal" data-bs-target="#latestInfoModal" style="cursor: pointer;">
+            <div class="card flex-fill hover-card" data-bs-toggle="modal" data-bs-target="#latestInfoModal" style="cursor: pointer;">
                 <div class="card-body">
                     <div class="row">
                         <div class="col mt-0">
@@ -149,7 +150,7 @@
 
         <!-- Total Items Card -->
         <div class="col-4 d-flex">
-            <div class="card flex-fill" data-bs-toggle="modal" data-bs-target="#latestItemModal" style="cursor: pointer;">
+            <div class="card flex-fill hover-card" data-bs-toggle="modal" data-bs-target="#latestItemModal" style="cursor: pointer;">
                 <div class="card-body">
                     <div class="row">
                         <div class="col mt-0">
@@ -166,11 +167,19 @@
         </div>
     </div>
 
-
-
-
-
 </div>
+
+<style>
+    .hover-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-card:hover {
+    transform: scale(1.02); /* Slightly enlarge the card */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* Add a shadow effect */
+}
+
+</style>
 
 <link href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
 

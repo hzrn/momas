@@ -11,13 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class MosqueController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -67,39 +61,12 @@ class MosqueController extends Controller
         // Flash success message
         flash(__('mosque.saved'))->success();
 
+        // Flash the location name to the session
+        session(['location_name' => $request->input('location_name', 'No location selected')]);
+
         // Redirect back to the form with success message
         return redirect()->route('mosque.create');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Mosque $mosque)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Mosque $mosque)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateMosqueRequest $request, Mosque $mosque)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Mosque $mosque)
-    {
-        //
-    }
 }

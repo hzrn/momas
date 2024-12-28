@@ -1,3 +1,6 @@
+
+@extends('layouts.app_adminkit')
+@section('content')
 <!-- Map Modal -->
 <div class="modal fade" id="mapModal" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -21,16 +24,13 @@
     </div>
 </div>
 
-@extends('layouts.app_adminkit')
-
-@section('content')
-<h1 class="h3 mb-3">{{$title}}</h1>
+<h1 class="h3 mb-3">{{ $title }}</h1>
 
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-header pb-0">
-                <h5 class="card-title">{{__('mosque.fill')}}</h5>
+                <h5 class="card-title">{{ __('mosque.fill') }}</h5>
             </div>
             <div class="card-body pt-0">
                 {!! Form::model($mosque, [
@@ -42,13 +42,13 @@
                 {!! csrf_field() !!}
 
                 <div class="form-group mb-3">
-                    <label for="name">{{__('mosque.name')}}</label>
+                    <label for="name">{{ __('mosque.name') }}</label>
                     {!! Form::text('name', null, ['class' => 'form-control', 'required']) !!}
                     <span class="text-danger">{!! $errors->first('name') !!}</span>
                 </div>
 
                 <div class="form-group mb-3">
-                    <label for="address">{{__('mosque.address')}}</label>
+                    <label for="address">{{ __('mosque.address') }}</label>
                     {!! Form::text('address', null, ['class' => 'form-control', 'required']) !!}
                     <span class="text-danger">{!! $errors->first('address') !!}</span>
                 </div>
@@ -60,7 +60,6 @@
                         'required',
                         'pattern' => '[0-9]*',
                         'inputmode' => 'numeric',
-
                     ]) !!}
                     <span class="text-danger">{!! $errors->first('phone_num') !!}</span>
                 </div>
@@ -77,7 +76,7 @@
                         <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#mapModal">
                             {{ __('mosque.select_location') }}
                         </button>
-                        {!! Form::text('location_name', null, [
+                        {!! Form::text('location_name', session('location_name', null), [
                             'class' => 'form-control ms-2',
                             'id' => 'location_name',
                             'readonly' => 'readonly',
@@ -89,14 +88,20 @@
                     {!! Form::hidden('longitude', null, ['id' => 'longitude']) !!}
                 </div>
 
-
                 {!! Form::submit(__('mosque.save'), ['class' => 'btn btn-primary']) !!}
-
                 {!! Form::close() !!}
             </div>
         </div>
     </div>
 </div>
+
+<!-- Leaflet CSS and JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+<!-- Leaflet Control Geocoder CSS and JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder@2.4.0/dist/Control.Geocoder.css" />
+<script src="https://unpkg.com/leaflet-control-geocoder@2.4.0/dist/Control.Geocoder.js"></script>
 
 <script>
     // Initialize variables
@@ -143,7 +148,7 @@
         }
     });
 
-    function updateLocationName(lat, lng) {
+    function updateLocationName(lat, lng, updatePlaceholder = false) {
         // Use the Nominatim OpenStreetMap geocoding service to get the location name
         fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=10`)
             .then(response => response.json())
@@ -152,26 +157,40 @@
                 if (data.display_name) {
                     // You can customize how much of the address you want to display
                     locationName = data.display_name;
+
+                    // If updatePlaceholder is true, set the placeholder
+                    if (updatePlaceholder) {
+                        document.getElementById('location_name').placeholder = locationName;
+                    }
+
+                    // Also update the input value if needed
                     document.getElementById('location_name').value = locationName;
                 }
             })
             .catch(error => {
                 console.error('Error fetching location name:', error);
-                document.getElementById('location_name').value = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+                const fallbackLocation = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+
+                if (updatePlaceholder) {
+                    document.getElementById('location_name').placeholder = fallbackLocation;
+                }
+
+                document.getElementById('location_name').value = fallbackLocation;
             });
     }
 
-    // Save the selected location
     document.getElementById('saveLocation').addEventListener('click', function () {
         const latLng = marker.getLatLng();
         console.log("Latitude: ", latLng.lat);
         console.log("Longitude: ", latLng.lng);
         document.getElementById('latitude').value = latLng.lat;
         document.getElementById('longitude').value = latLng.lng;
-        updateLocationName(latLng.lat, latLng.lng);
+
+        // Use updateLocationName and update the placeholder when it's done
+        updateLocationName(latLng.lat, latLng.lng, true);
+
         $('#mapModal').modal('hide');
     });
 </script>
-
 
 @endsection

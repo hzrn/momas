@@ -58,7 +58,7 @@ return [
     'analysis_title' => 'Item Analysis',
     'select_year' => 'Select Year',
     'select_month' => 'Select Month',
-    'yearly_tem_analysis' => 'Yearly Item Analysis',
+    'yearly_item_analysis' => 'Yearly Item Analysis',
     'total_info' => 'Total Items',
     'category_distribution' => 'Category Distribution',
     'summary' => 'Summary',
