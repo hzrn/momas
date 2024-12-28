@@ -22,18 +22,17 @@
                     <tbody>
                         @forelse($modalIncome as $key => $income)
                             <tr>
-                                <td>{{$loop->iteration }}</td>
+                                <td>{{ $loop->iteration }}</td>
                                 <td>{{ \Carbon\Carbon::parse($income->date)->format('Y/m/d') }}</td>
                                 <td>{{ $income->description }}</td>
                                 <td>{{ formatRM($income->amount) }}</td>
                             </tr>
                         @empty
-                            <tr>
-                                <td colspan="4" class="text-center">{{ __('home.no_records_found') }}</td>
-                            </tr>
+
                         @endforelse
                     </tbody>
                 </table>
+
             </div>
         </div>
     </div>
@@ -48,8 +47,10 @@
             searching: false,
             ordering: true,
             language: {
-                emptyTable: "{{ __('home.no_records_found') }}"
+                emptyTable: "{{ __('home.no_records_found') }}",
+                url: "{{ app()->getLocale() === 'ms' ? 'https://cdn.datatables.net/plug-ins/1.13.5/i18n/ms.json' : 'https://cdn.datatables.net/plug-ins/1.13.5/i18n/en-GB.json' }}"
             }
         });
     });
 </script>
+

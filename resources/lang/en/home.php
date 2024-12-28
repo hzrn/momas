@@ -28,6 +28,7 @@ return [
     'position' => 'Position',
     'title' => 'Title',
     'quantity' => 'Quantity',
+    'no_records_found' => 'No records found',
 
 
 ];

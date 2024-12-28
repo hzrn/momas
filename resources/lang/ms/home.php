@@ -28,5 +28,6 @@ return [
     'position' => 'Jawatan',
     'title' => 'Tajuk',
     'quantity' => 'Kuantiti',
+    'no_records_found' => 'Tiada Rekod Ditemui',
 
 ];

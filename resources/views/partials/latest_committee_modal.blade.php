@@ -28,9 +28,7 @@
                                 <td>{{ $committee->position }}</td>
                             </tr>
                         @empty
-                            <tr>
-                                <td colspan="4" class="text-center">{{ __('home.no_records_found') }}</td>
-                            </tr>
+
                         @endforelse
                     </tbody>
                 </table>
@@ -48,8 +46,10 @@
             searching: false,
             ordering: true,
             language: {
-                emptyTable: "{{ __('home.no_records_found') }}"
+                emptyTable: "{{ __('home.no_records_found') }}",
+                url: "{{ app()->getLocale() === 'ms' ? 'https://cdn.datatables.net/plug-ins/1.13.5/i18n/ms.json' : 'https://cdn.datatables.net/plug-ins/1.13.5/i18n/en-GB.json' }}"
             }
         });
     });
 </script>
+
