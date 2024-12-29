@@ -30,7 +30,7 @@
                         <td>
                             @if ($committee->photo)
                                 <!-- Clickable image to open the modal -->
-                                <img src="{{ asset('storage/committees/' . $committee->photo) }}"
+                                <img src="{{ $committee->photo }}"
                                      alt="{{ $committee->name }}"
                                      width="100" height="100"
                                      data-bs-toggle="modal" data-bs-target="#photoModal"
@@ -76,7 +76,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-body text-center">
-                    <img src="{{ asset('storage/committees/' . $committee->photo) }}"
+                    <img src="{{ $committee->photo }}"
                          alt="{{ $committee->name }}"
                          class="img-fluid">
                 </div>
