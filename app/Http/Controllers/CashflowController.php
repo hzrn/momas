@@ -59,7 +59,7 @@ class CashflowController extends Controller
         }
 
         $cashflow = Cashflow::create($requestData);
-        $this->updateTotalAmount($cashflow->mosque_id);
+        // $this->updateTotalAmount($cashflow->mosque_id);
 
         flash(__('cashflow.saved'))->success();
         return redirect()->route('cashflow.index');
@@ -98,7 +98,7 @@ class CashflowController extends Controller
         }
 
         $cashflow->update($validatedData + ['updated_by' => auth()->id()]);
-        $this->updateTotalAmount($cashflow->mosque_id);
+        // $this->updateTotalAmount($cashflow->mosque_id);
 
         flash(__('cashflow.updated'))->success();
         return redirect()->route('cashflow.index');
@@ -110,8 +110,8 @@ class CashflowController extends Controller
             Storage::delete('public/cashflows/' . $cashflow->photo);
         }
 
-        $cashflow->delete();
-        $this->updateTotalAmount($cashflow->mosque_id);
+        // $cashflow->delete();
+        // $this->updateTotalAmount($cashflow->mosque_id);
 
         flash(__('cashflow.deleted'))->success();
         return redirect()->route('cashflow.index');
