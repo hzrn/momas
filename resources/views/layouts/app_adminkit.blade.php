@@ -153,7 +153,7 @@
                     <ul class="navbar-nav">
                         <li class="nav-item dropdown">
                             <div class="fw-bold">
-                                {{ optional(auth()->user()->mosque)->name ?? __('messages.mosque_assigned') }}
+                                {{ optional(auth()->user()->mosque)->name ?? __('mosque.no_mosque') }}
                             </div>
                         </li>
                     </ul>

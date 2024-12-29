@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Committee;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class CommitteeController extends Controller
 {
@@ -47,8 +47,8 @@ class CommitteeController extends Controller
         ]);
 
         if ($request->hasFile('photo')) {
-            $imageName = $this->storePhoto($request->file('photo'));
-            $requestData['photo'] = $imageName;
+            $imagePath = $this->storePhoto($request->file('photo'));
+            $requestData['photo'] = $imagePath;
         }
 
         Committee::create($requestData);
@@ -92,7 +92,7 @@ class CommitteeController extends Controller
         ]);
 
         if ($request->hasFile('photo')) {
-            $this->deletePhoto($committee->photo);
+            $this->deletePhoto($committee->photo); // Delete old photo from Cloudinary
             $validatedData['photo'] = $this->storePhoto($request->file('photo'));
         }
 
@@ -126,22 +126,26 @@ class CommitteeController extends Controller
     }
 
     /**
-     * Store uploaded photo and return the filename.
+     * Store uploaded photo on Cloudinary and return the URL.
      */
     protected function storePhoto($image)
     {
-        $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-        $image->storeAs('public/committees', $imageName);
-        return $imageName;
+        $result = Cloudinary::upload($image->getRealPath(), [
+            'folder' => 'committees',
+        ]);
+
+        return $result->getSecurePath(); // Secure URL from Cloudinary
     }
 
     /**
-     * Delete photo from storage if it exists.
+     * Delete photo from Cloudinary if it exists.
      */
     protected function deletePhoto($photo)
     {
         if ($photo) {
-            Storage::delete('public/committees/' . $photo);
+            // Extract the public ID from the URL
+            $publicId = basename(parse_url($photo, PHP_URL_PATH), '.' . pathinfo($photo, PATHINFO_EXTENSION));
+            Cloudinary::destroy('committees/' . $publicId);
         }
     }
 }

@@ -32,7 +32,7 @@
                                     <td>{{ $item->address }}</td>
                                     <td>
                                         @if($item->photo)
-                                            <img src="{{ asset('storage/committees/' . $item->photo) }}" alt="{{ __('committee.photo') }}" width="50" height="50">
+                                            <img src="{{ $item->photo }}" alt="{{ __('committee.photo') }}" width="50" height="50">
                                         @else
                                             -
                                         @endif

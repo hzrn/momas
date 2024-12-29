@@ -20376,6 +20376,32 @@ namespace Illuminate\Http {
                         return \Illuminate\Http\Request::hasValidSignatureWhileIgnoring($ignoreQuery, $absolute);
         }
             }
+            /**
+     * 
+     *
+     */        class UploadedFile {
+                    /**
+         * 
+         *
+         * @see \CloudinaryLabs\CloudinaryLaravel\CloudinaryServiceProvider::bootMacros()
+         * @param mixed $folder
+         * @static 
+         */        public static function storeOnCloudinary($folder = null)
+        {
+                        return \Illuminate\Http\UploadedFile::storeOnCloudinary($folder);
+        }
+                    /**
+         * 
+         *
+         * @see \CloudinaryLabs\CloudinaryLaravel\CloudinaryServiceProvider::bootMacros()
+         * @param mixed $folder
+         * @param mixed $publicId
+         * @static 
+         */        public static function storeOnCloudinaryAs($folder = null, $publicId = null)
+        {
+                        return \Illuminate\Http\UploadedFile::storeOnCloudinaryAs($folder, $publicId);
+        }
+            }
     }
 
 namespace Illuminate\Routing {
