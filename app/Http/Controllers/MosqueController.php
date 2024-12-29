@@ -37,7 +37,6 @@ class MosqueController extends Controller
             'address' => 'required|string|max:500',
             'phone_num' => 'required|numeric',
             'email' => 'required|email|max:255',
-            'final_amount' => 'nullable|numeric',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
         ]);
@@ -50,7 +49,6 @@ class MosqueController extends Controller
         $mosque->address = $data['address'];
         $mosque->phone_num = $data['phone_num'];
         $mosque->email = $data['email'];
-        $mosque->final_amount = $data['final_amount'];
         $mosque->latitude = $data['latitude'];
         $mosque->longitude = $data['longitude'];
         $mosque->save();

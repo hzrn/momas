@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Mosque extends Model
 {
-    protected $fillable = ['name', 'address', 'phone_num', 'email', 'final_amount', 'latitude', 'longitude'];
+    protected $fillable = ['name', 'address', 'phone_num', 'email', 'latitude', 'longitude'];
 
     public function cashflows()
     {
