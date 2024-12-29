@@ -59,8 +59,8 @@
                     { orderable: false, targets: 5 }, // Disable ordering for Action column
                     {
                         targets: 4, // Target Content column
-                        render: function (data, type, row, meta) {
-                            return `<div style="min-width: 200px;">${data}</div>`;
+                        createdCell: function (td) {
+                            $(td).css('min-width', '200px');
                         }
                     }
                 ],
@@ -69,12 +69,14 @@
                 }
             });
 
-            // Recalculate column widths when the window is resized
+            // Trigger table redraw on window resize to ensure proper layout
             $(window).on('resize', function () {
+                table.responsive.recalc();
                 table.columns.adjust();
             });
         });
     </script>
+
 
 
 
