@@ -185,7 +185,7 @@
                                     @endforeach
                                     <li><hr class="dropdown-divider"></li>
                                     <li class="dropdown-item text-center">
-                                        <button class="btn btn-danger" onclick="removeAllReminders()">Remove All Reminders</button>
+                                        <button class="btn btn-danger" onclick="removeAllReminders()">{{ __('nav.remove_all_reminders') }}</button>
                                     </li>
                                 @else
                                     <li class="dropdown-item">{{ __('nav.no_reminders_for_today') }}</li>

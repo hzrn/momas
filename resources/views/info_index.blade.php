@@ -26,11 +26,10 @@
                         <tbody>
                             @foreach ($info as $item)
                                 @php
-                                    $formattedDate = formatDate($item->date); // Using the helper here
-                                    $message = __('info.title') . ": {$item->title}\n" .
-                                               __('info.date') . ": $formattedDate\n" .
-                                               __('info.description') . ": " . ($item->description ?? __('info.no_description'));
-                                    $whatsappLink = "https://wa.me/send?text=" . urlencode($message);
+                                    $message =  __('info.title') . ": {$item->title}\n" .
+                                                __('info.date') . ": $formattedDate\n" .
+                                                __('info.description') . ": " . strip_tags($item->description ?? __('info.no_description'));
+                                        $whatsappLink = "https://wa.me/send?text=" . urlencode($message);
                                 @endphp
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>

@@ -15,6 +15,7 @@ return [
     'item_analysis' => 'Analisis Inventori',
 
     'no_reminders_for_today' => 'Tiada peringatan untuk hari ini',
+    'remove_all_reminders' => 'Hapus semua peringatan',
 
 
 
