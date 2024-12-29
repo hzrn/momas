@@ -57,23 +57,13 @@
                 "responsive": true,
                 columnDefs: [
                     { orderable: false, targets: 5 }, // Disable ordering for Action column
-                    {
-                        targets: 4, // Target Content column
-                        createdCell: function (td) {
-                            $(td).css('min-width', '200px');
-                        }
-                    }
+
                 ],
                 "language": {
                     "url": "{{ app()->getLocale() === 'ms' ? 'https://cdn.datatables.net/plug-ins/1.13.5/i18n/ms.json' : 'https://cdn.datatables.net/plug-ins/1.13.5/i18n/en-GB.json' }}"
                 }
             });
 
-            // Trigger table redraw on window resize to ensure proper layout
-            $(window).on('resize', function () {
-                table.responsive.recalc();
-                table.columns.adjust();
-            });
         });
     </script>
 
