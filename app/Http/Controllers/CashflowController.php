@@ -117,13 +117,13 @@ class CashflowController extends Controller
         return redirect()->route('cashflow.index');
     }
 
-    private function updateTotalAmount($mosque_id)
-    {
-        $mosque = Mosque::findOrFail($mosque_id);
-        $mosque->total_amount = $mosque->cashflows()->where('type', 'income')->sum('amount') -
-            $mosque->cashflows()->where('type', 'expenses')->sum('amount');
-        $mosque->save();
-    }
+    // private function updateTotalAmount($mosque_id)
+    // {
+    //     $mosque = Mosque::findOrFail($mosque_id);
+    //     $mosque->total_amount = $mosque->cashflows()->where('type', 'income')->sum('amount') -
+    //         $mosque->cashflows()->where('type', 'expenses')->sum('amount');
+    //     $mosque->save();
+    // }
 
     public function exportPDF()
     {
