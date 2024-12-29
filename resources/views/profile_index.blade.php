@@ -56,7 +56,13 @@
                 "info": true,
                 "responsive": true,
                 columnDefs: [
-                    { orderable: false, targets: 5 }
+                    { orderable: false, targets: 5 }, // Disable ordering for the Action column
+                    {
+                        targets: 4, // Target Content column (zero-based index)
+                        render: function(data, type, row, meta) {
+                            return `<div style="min-width: 200px;">${data}</div>`;
+                        }
+                    }
                 ],
                 "language": {
                     "url": "{{ app()->getLocale() === 'ms' ? 'https://cdn.datatables.net/plug-ins/1.13.5/i18n/ms.json' : 'https://cdn.datatables.net/plug-ins/1.13.5/i18n/en-GB.json' }}"
