@@ -7,6 +7,7 @@ use App\Models\Cashflow;
 use App\Models\Mosque;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class CashflowController extends Controller
 {
@@ -52,10 +53,8 @@ class CashflowController extends Controller
         ]);
 
         if ($request->hasFile('photo')) {
-            $image = $request->file('photo');
-            $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('public/cashflows', $imageName);
-            $requestData['photo'] = $imageName;
+            $imagePath = $this->storePhoto($request->file('photo'));
+            $requestData['photo'] = $imagePath;
         }
 
         $cashflow = Cashflow::create($requestData);
@@ -87,14 +86,8 @@ class CashflowController extends Controller
         ]);
 
         if ($request->hasFile('photo')) {
-            if ($cashflow->photo) {
-                Storage::delete('public/cashflows/' . $cashflow->photo);
-            }
-
-            $image = $request->file('photo');
-            $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('public/cashflows', $imageName);
-            $validatedData['photo'] = $imageName;
+            $this->deletePhoto($cashflow->photo); // Delete old photo from Cloudinary
+            $validatedData['photo'] = $this->storePhoto($request->file('photo'));
         }
 
         $cashflow->update($validatedData + ['updated_by' => auth()->id()]);
@@ -106,15 +99,35 @@ class CashflowController extends Controller
 
     public function destroy(Cashflow $cashflow)
     {
-        if ($cashflow->photo) {
-            Storage::delete('public/cashflows/' . $cashflow->photo);
-        }
-
-        // $cashflow->delete();
-        // $this->updateTotalAmount($cashflow->mosque_id);
+        $this->deletePhoto($cashflow->photo); // Delete photo from Cloudinary
+        $cashflow->delete();
 
         flash(__('cashflow.deleted'))->success();
         return redirect()->route('cashflow.index');
+    }
+
+        /**
+     * Store uploaded photo on Cloudinary and return the URL.
+     */
+    protected function storePhoto($image)
+    {
+        $result = Cloudinary::upload($image->getRealPath(), [
+            'folder' => 'cashflows',
+        ]);
+
+        return $result->getSecurePath(); // Secure URL from Cloudinary
+    }
+
+    /**
+     * Delete photo from Cloudinary if it exists.
+     */
+    protected function deletePhoto($photo)
+    {
+        if ($photo) {
+            // Extract the public ID from the URL
+            $publicId = basename(parse_url($photo, PHP_URL_PATH), '.' . pathinfo($photo, PATHINFO_EXTENSION));
+            Cloudinary::destroy('cashflows/' . $publicId);
+        }
     }
 
     // private function updateTotalAmount($mosque_id)
@@ -428,10 +441,5 @@ class CashflowController extends Controller
 
         return $categoryCollection;
     }
-
-
-
-
-
 
 }
