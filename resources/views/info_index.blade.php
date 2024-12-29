@@ -25,42 +25,49 @@
                         </thead>
                         <tbody>
                             @foreach ($info as $item)
-                                @php
-                                    $message =  __('info.title') . ": {$item->title}\n" .
-                                                __('info.date') . ": $formattedDate\n" .
-                                                __('info.description') . ": " . strip_tags($item->description ?? __('info.no_description'));
-                                        $whatsappLink = "https://wa.me/send?text=" . urlencode($message);
-                                @endphp
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $item->title }}</td>
-                                    <td>{{ $item->category->name ?? 'N/A' }}</td>
-                                    <td>{!! $formattedDate !!}</td> <!-- Using formattedDate -->
-                                    <td>{!! nl2br(e($item->description ?? '-')) !!}</td>
-                                    <td>
-                                        @if($item->photo)
-                                            <img src="{{ $item->photo }}" alt="{{ __('info.photo') }}" width="50" height="50">
-                                        @else
-                                            -
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <a href="{{ route('info.show', $item->id) }}" class="btn btn-secondary mb-1">{{ __('info.details') }}</a>
-                                        <a href="{{ route('info.edit', $item->id) }}" class="btn btn-warning mb-1">{{ __('info.edit') }}</a>
+                            @php
+                                // Format the date
+                                $formattedDate = \Carbon\Carbon::parse($item->date)->format('d/m/Y h:i A');
 
-                                        <!-- WhatsApp Share Button -->
-                                        <a href="{{ $whatsappLink }}" target="_blank" class="btn btn-success mb-1">
-                                            <i class="bi bi-whatsapp pe-1"></i>{{ __('info.share_whatsapp') }}
-                                        </a>
+                                // Generate the WhatsApp message
+                                $message = __('info.title') . ": {$item->title}\n" .
+                                           __('info.date') . ": $formattedDate\n" .
+                                           __('info.description') . ": " . strip_tags($item->description ?? __('info.no_description'));
 
-                                        <form action="{{ route('info.destroy', $item->id) }}" method="POST" style="display:inline-block;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger mb-1">{{ __('info.delete') }}</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
+                                // Create the WhatsApp link
+                                $whatsappLink = "https://wa.me/send?text=" . urlencode($message);
+                            @endphp
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $item->title }}</td>
+                                <td>{{ $item->category->name ?? 'N/A' }}</td>
+                                <td>{!! $formattedDate !!}</td>
+                                <td>{!! nl2br(e($item->description ?? '-')) !!}</td>
+                                <td>
+                                    @if($item->photo)
+                                        <img src="{{ $item->photo }}" alt="{{ __('info.photo') }}" width="50" height="50">
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td>
+                                    <a href="{{ route('info.show', $item->id) }}" class="btn btn-secondary mb-1">{{ __('info.details') }}</a>
+                                    <a href="{{ route('info.edit', $item->id) }}" class="btn btn-warning mb-1">{{ __('info.edit') }}</a>
+
+                                    <!-- WhatsApp Share Button -->
+                                    <a href="{{ $whatsappLink }}" target="_blank" class="btn btn-success mb-1">
+                                        <i class="bi bi-whatsapp pe-1"></i>{{ __('info.share_whatsapp') }}
+                                    </a>
+
+                                    <form action="{{ route('info.destroy', $item->id) }}" method="POST" style="display:inline-block;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger mb-1">{{ __('info.delete') }}</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+
                         </tbody>
                     </table>
                 </div>
