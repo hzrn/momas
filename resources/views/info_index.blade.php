@@ -38,10 +38,9 @@
                                     <td>{{ $item->category->name ?? 'N/A' }}</td>
                                     <td>{!! $formattedDate !!}</td> <!-- Using formattedDate -->
                                     <td>{!! nl2br(e($item->description ?? '-')) !!}</td>
-
                                     <td>
                                         @if($item->photo)
-                                            <img src="{{ asset('storage/infos/' . $item->photo) }}" alt="Photo" width="50" height="50">
+                                            <img src="{{ $item->photo }}" alt="{{ __('info.photo') }}" width="50" height="50">
                                         @else
                                             -
                                         @endif

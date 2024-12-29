@@ -7,6 +7,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class InfoController extends Controller
 {
@@ -44,9 +45,8 @@ class InfoController extends Controller
         \Log::info('Storing Info:', $requestData);
 
         if ($request->hasFile('photo')) {
-            $imageName = uniqid() . '.' . $request->photo->extension();
-            $request->photo->storeAs('public/infos', $imageName);
-            $requestData['photo'] = $imageName;
+            $imagePath = $this->storePhoto($request->file('photo'));
+            $requestData['photo'] = $imagePath;
         }
 
         Info::create($requestData);
@@ -111,12 +111,8 @@ class InfoController extends Controller
         \Log::info('Updating Info:', $requestData);
 
         if ($request->hasFile('photo')) {
-            if ($info->photo) {
-                Storage::delete('public/infos/' . $info->photo);
-            }
-            $imageName = uniqid() . '.' . $request->photo->extension();
-            $request->photo->storeAs('public/infos', $imageName);
-            $requestData['photo'] = $imageName;
+            $this->deletePhoto($info->photo); // Delete old photo from Cloudinary
+            $validatedData['photo'] = $this->storePhoto($request->file('photo'));
         }
 
         $info->update($requestData + ['updated_by' => auth()->id()]);
@@ -143,15 +139,37 @@ class InfoController extends Controller
         return redirect()->route('info.index');
     }
 
-    public function destroy(Info $info)
+    public function destroy(info $info)
     {
-        if ($info->photo) {
-            Storage::delete('public/infos/' . $info->photo);
-        }
+        $this->deletePhoto($info->photo);
         $info->delete();
 
         flash(__('info.deleted'))->success();
         return redirect()->route('info.index');
+    }
+
+        /**
+     * Store uploaded photo on Cloudinary and return the URL.
+     */
+    protected function storePhoto($image)
+    {
+        $result = Cloudinary::upload($image->getRealPath(), [
+            'folder' => 'infos',
+        ]);
+
+        return $result->getSecurePath(); // Secure URL from Cloudinary
+    }
+
+    /**
+     * Delete photo from Cloudinary if it exists.
+     */
+    protected function deletePhoto($photo)
+    {
+        if ($photo) {
+            // Extract the public ID from the URL
+            $publicId = basename(parse_url($photo, PHP_URL_PATH), '.' . pathinfo($photo, PATHINFO_EXTENSION));
+            Cloudinary::destroy('infos/' . $publicId);
+        }
     }
 
     public function exportPDF()

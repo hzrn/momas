@@ -30,7 +30,7 @@
                         <td>
                             @if ($info->photo)
                                 <!-- Clickable image to open the modal -->
-                                <img src="{{ asset('storage/infos/' . $info->photo) }}"
+                                <img src="{{ $info->photo }}"
                                      alt="{{ $info->name }}"
                                      width="100" height="100"
                                      data-bs-toggle="modal" data-bs-target="#photoModal"
@@ -77,7 +77,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-body text-center">
-                    <img src="{{ asset('storage/infos/' . $info->photo) }}"
+                    <img src="{{ $info->photo }}"
                          alt="{{ $info->name }}"
                          class="img-fluid">
                 </div>

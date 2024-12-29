@@ -8,6 +8,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+
 
 
 class ItemController extends Controller
@@ -51,9 +53,8 @@ class ItemController extends Controller
         ]);
 
         if ($request->hasFile('photo')) {
-            $imageName = uniqid() . '.' . $request->photo->extension();
-            $request->photo->storeAs('public/items', $imageName);
-            $requestData['photo'] = $imageName;
+            $imagePath = $this->storePhoto($request->file('photo'));
+            $requestData['photo'] = $imagePath;
         }
 
         $requestData['created_by'] = auth()->id();
@@ -101,12 +102,8 @@ class ItemController extends Controller
         ]);
 
         if ($request->hasFile('photo')) {
-            if ($item->photo) {
-                Storage::delete('public/items/' . $item->photo);
-            }
-            $imageName = uniqid() . '.' . $request->photo->extension();
-            $request->photo->storeAs('public/items', $imageName);
-            $requestData['photo'] = $imageName;
+            $this->deletePhoto($item->photo); // Delete old photo from Cloudinary
+            $validatedData['photo'] = $this->storePhoto($request->file('photo'));
         }
 
         $item->update($requestData + ['updated_by' => auth()->id()]);
@@ -117,15 +114,37 @@ class ItemController extends Controller
     /**
      * Remove the specified item.
      */
-    public function destroy(Item $item)
+    public function destroy(item $item)
     {
-        if ($item->photo) {
-            Storage::delete('public/items/' . $item->photo);
-        }
+        $this->deletePhoto($item->photo);
         $item->delete();
 
         flash(__('item.deleted'))->success();
         return redirect()->route('item.index');
+    }
+
+        /**
+     * Store uploaded photo on Cloudinary and return the URL.
+     */
+    protected function storePhoto($image)
+    {
+        $result = Cloudinary::upload($image->getRealPath(), [
+            'folder' => 'items',
+        ]);
+
+        return $result->getSecurePath(); // Secure URL from Cloudinary
+    }
+
+    /**
+     * Delete photo from Cloudinary if it exists.
+     */
+    protected function deletePhoto($photo)
+    {
+        if ($photo) {
+            // Extract the public ID from the URL
+            $publicId = basename(parse_url($photo, PHP_URL_PATH), '.' . pathinfo($photo, PATHINFO_EXTENSION));
+            Cloudinary::destroy('items/' . $publicId);
+        }
     }
 
     /**

@@ -34,7 +34,7 @@
                                     <td>{{formatRM($item->price)}}</td>
                                     <td>
                                         @if($item->photo)
-                                            <img src="{{ asset('storage/items/' . $item->photo) }}" alt="Photo" width="50" height="50">
+                                            <img src="{{ $item->photo }}" alt="{{ __('item.photo') }}" width="50" height="50">
                                         @else
                                             -
                                         @endif
