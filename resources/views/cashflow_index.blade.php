@@ -54,7 +54,7 @@
                             <td>{{ $item->type == 'expenses' ? formatRM($item->amount) : '-' }}</td>
                             <td>
                                 @if($item->photo)
-                                    <img src="{{ asset('storage/cashflows/' . $item->photo) }}" alt="{{ __('cashflow.photo') }}" width="50" height="50">
+                                    <img src="{{ $item->photo }}" alt="{{ __('cashflow.photo') }}" width="50" height="50">
                                 @else
                                     -
                                 @endif

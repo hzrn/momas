@@ -43,13 +43,13 @@
                         <td>
                             @if ($cashflow->photo)
                                 <!-- Clickable image to open the modal -->
-                                <img src="{{ asset('storage/cashflows/' . $cashflow->photo) }}"
+                                <img src="{{ $cashflow->photo }}"
                                      alt="{{ $cashflow->name }}"
                                      width="100" height="100"
                                      data-bs-toggle="modal" data-bs-target="#photoModal"
                                      style="cursor: pointer;">
                             @else
-                                {{ __('cashflow.no_photo') }}
+                                -
                             @endif
                         </td>
                     </tr>
@@ -89,7 +89,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-body text-center">
-                    <img src="{{ asset('storage/cashflows/' . $cashflow->photo) }}"
+                    <img src="{{ $cashflow->photo }}"
                          alt="{{ $cashflow->name }}"
                          class="img-fluid">
                 </div>
