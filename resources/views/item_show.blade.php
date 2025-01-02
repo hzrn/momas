@@ -36,7 +36,7 @@
                                 <!-- Clickable image to open the modal -->
                                 <img src="{{ $item->photo }}"
                                      alt="{{ $item->name }}"
-                                     width="100" height="100"
+                                     width="auto" height="100"
                                      data-bs-toggle="modal" data-bs-target="#photoModal"
                                      style="cursor: pointer;">
                             @else

@@ -6,6 +6,8 @@ use App\Models\Committee;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use Illuminate\Http\Exceptions\PostTooLargeException;
+use Illuminate\Support\Facades\Log;
 
 class CommitteeController extends Controller
 {
@@ -38,22 +40,30 @@ class CommitteeController extends Controller
      */
     public function store(Request $request)
     {
-        $requestData = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone_num' => 'required|string|max:15',
-            'position' => 'required|string|max:255',
-            'address' => 'required|string|max:500',
-            'photo' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
-        ]);
+        try {
+            $requestData = $request->validate([
+                'name' => 'required|string|max:255',
+                'phone_num' => 'required|string|max:15',
+                'position' => 'required|string|max:255',
+                'address' => 'required|string|max:500',
+                'photo' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+            ]);
 
-        if ($request->hasFile('photo')) {
-            $imagePath = $this->storePhoto($request->file('photo'));
-            $requestData['photo'] = $imagePath;
+            if ($request->hasFile('photo')) {
+                $imagePath = $this->storePhoto($request->file('photo'));
+                $requestData['photo'] = $imagePath;
+            }
+
+            Committee::create($requestData);
+            flash(__('committee.saved'))->success();
+            return redirect()->route('committee.index');
+        } catch (PostTooLargeException $e) {
+            return back()->withErrors(['photo' => __('The uploaded file is too large. Please upload a smaller image.')])
+                         ->withInput();
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => __('An unexpected error occurred. Please try again.')])
+                         ->withInput();
         }
-
-        Committee::create($requestData);
-        flash(__('committee.saved'))->success();
-        return redirect()->route('committee.index');
     }
 
     /**
@@ -83,22 +93,38 @@ class CommitteeController extends Controller
      */
     public function update(Request $request, Committee $committee)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone_num' => 'required|string|max:15',
-            'position' => 'required|string|max:255',
-            'address' => 'required|string|max:500',
-            'photo' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
-        ]);
+        try {
+            $validatedData = $request->validate([
+                'name' => 'required|string|max:255',
+                'phone_num' => 'required|string|max:15',
+                'position' => 'required|string|max:255',
+                'address' => 'required|string|max:500',
+                'photo' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+            ]);
 
-        if ($request->hasFile('photo')) {
-            $this->deletePhoto($committee->photo); // Delete old photo from Cloudinary
-            $validatedData['photo'] = $this->storePhoto($request->file('photo'));
+            if ($request->hasFile('photo')) {
+                // Delete the old photo if it exists
+                $this->deletePhoto($committee->photo);
+
+                // Upload the new photo and store its URL
+                $validatedData['photo'] = $this->storePhoto($request->file('photo'));
+            }
+
+            // Update the committee record
+            $committee->update($validatedData);
+
+            flash(__('committee.updated'))->success();
+            return redirect()->route('committee.index');
+        } catch (PostTooLargeException $e) {
+            return back()->withErrors(['photo' => __('The uploaded file is too large. Please upload a smaller image.')])
+                         ->withInput();
+        } catch (\Exception $e) {
+            // Log the error for debugging purposes
+            Log::error('Error updating committee: ' . $e->getMessage());
+
+            return back()->withErrors(['error' => __('An unexpected error occurred. Please try again.')])
+                         ->withInput();
         }
-
-        $committee->update($validatedData);
-        flash(__('committee.updated'))->success();
-        return redirect()->route('committee.index');
     }
 
     /**
