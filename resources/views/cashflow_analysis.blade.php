@@ -272,7 +272,7 @@
 
                     // Update chart title
                     const dailyLineChartTitle = document.getElementById('dailyLineChartTitle');
-                    dailyLineChartTitle.textContent = `{{ __('cashflow.daily_cashflow_analysis') }} - ${monthNames[month - 1]} ${year}`;
+                    dailyLineChartTitle.textContent = `{{ __('cashflow.daily_cashflow_analysis') }} - ${monthNames[month + 1]} ${year}`;
 
                     // Destroy old chart if it exists
                     if (dailyLineChart) {
