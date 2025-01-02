@@ -8,7 +8,7 @@
 @include('partials.latest_info_modal')
 @include('partials.latest_item_modal')
 
-<div class="container-fluid p-0">
+<div class="container-fluid p-0 " style="overflow: auto;">
 
     <h1 class="h3 mb-3">{{__('home.mosque_dashboard')}}</h1>
 
