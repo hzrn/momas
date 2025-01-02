@@ -19,27 +19,25 @@
     </div>
 
     <!-- Line Chart Section -->
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title" id="lineChartTitle">{{ __('cashflow.yearly_cashflow_analysis') }}</h5>
-                </div>
-                <div class="card-body">
-                    <canvas id="lineChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Daily Cashflow Chart Section -->
     <div class="row mb-4">
+        <!-- Year Selector -->
+        <div class="col-sm-4">
+            <label for="dailyYearSelector">{{ __('cashflow.select_year') }}</label>
+            <select id="dailyYearSelector" class="form-control">
+                @for($year = now()->year; $year >= now()->year - 5; $year--)
+                    <option value="{{ $year }}" {{ $year == now()->year ? 'selected' : '' }}>
+                        {{ $year }}
+                    </option>
+                @endfor
+            </select>
+        </div>
+
+        <!-- Month Selector -->
         <div class="col-sm-4">
             <label for="dailyMonthSelector">{{ __('cashflow.select_month') }}</label>
             <select id="dailyMonthSelector" class="form-control">
                 @foreach(getMonthNames() as $monthNum => $monthName)
-                    <option value="{{ $monthNum }}"
-                        {{ $monthNum == now()->format('m') ? 'selected' : '' }}>
+                    <option value="{{ $monthNum }}" {{ $monthNum == now()->format('m') ? 'selected' : '' }}>
                         {{ $monthName }}
                     </option>
                 @endforeach
@@ -60,6 +58,7 @@
             </div>
         </div>
     </div>
+
 
     <!-- Year and Month Selector for Pie Chart -->
     <div class="row mb-4">
@@ -243,92 +242,91 @@
     let dailyLineChart = null;
 
     document.addEventListener('DOMContentLoaded', function () {
-        // Pass translated month names dynamically from the helper function
-        const monthNames = {!! json_encode(getMonthNames()) !!};
+    const monthNames = {!! json_encode(getMonthNames()) !!};
 
-        // Fetch the data for the current month when the page loads
-        fetchDailyCashflowData(new Date().getMonth() + 1, monthNames);
+    // Initial fetch with current month and year
+    fetchDailyCashflowData(new Date().getFullYear(), new Date().getMonth() + 1, monthNames);
 
-        // Set up event listener for month selection change
-        document.getElementById('dailyMonthSelector').addEventListener('change', function () {
-            const selectedMonth = this.value; // Get the selected month
-            fetchDailyCashflowData(selectedMonth, monthNames);
-        });
+    // Event listeners for year and month changes
+    document.getElementById('dailyYearSelector').addEventListener('change', function () {
+        const selectedYear = this.value;
+        const selectedMonth = document.getElementById('dailyMonthSelector').value;
+        fetchDailyCashflowData(selectedYear, selectedMonth, monthNames);
     });
 
-    function fetchDailyCashflowData(month, monthNames) {
-        const year = new Date().getFullYear(); // Get the current year
-        const params = new URLSearchParams({ year, month });
+    document.getElementById('dailyMonthSelector').addEventListener('change', function () {
+        const selectedMonth = this.value;
+        const selectedYear = document.getElementById('dailyYearSelector').value;
+        fetchDailyCashflowData(selectedYear, selectedMonth, monthNames);
+    });
+});
 
-        fetch(`{{ route('cashflow.getDailyCashflow') }}?${params}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
+function fetchDailyCashflowData(year, month, monthNames) {
+    const params = new URLSearchParams({ year, month });
 
-                // Update chart title
-                const dailyLineChartTitle = document.getElementById('dailyLineChartTitle');
-                const monthIndex = parseInt(month, 10) - 1; // Convert to zero-based index
-                dailyLineChartTitle.textContent = `{{ __('cashflow.daily_cashflow_analysis') }} - ${monthNames[monthIndex]} ${year}`;
+    fetch(`{{ route('cashflow.getDailyCashflow') }}?${params}`)
+        .then(response => response.json())
+        .then(data => {
+            const dailyLineChartTitle = document.getElementById('dailyLineChartTitle');
+            const monthIndex = parseInt(month, 10) - 1; // Convert to zero-based index
+            dailyLineChartTitle.textContent = `{{ __('cashflow.daily_cashflow_analysis') }} - ${monthNames[monthIndex]} ${year}`;
 
-                // Destroy old chart if it exists
-                if (dailyLineChart) {
-                    dailyLineChart.destroy();
-                }
+            // Destroy old chart if it exists
+            if (dailyLineChart) {
+                dailyLineChart.destroy();
+            }
 
-                // Reinitialize the chart with the new data
-                const ctx = document.getElementById('dailyLineChart').getContext('2d');
-                dailyLineChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: Object.keys(data.chartData), // Dates
-                        datasets: [
-                            {
-                                label: '{{ __('cashflow.daily_cashflow') }}', // Translated label
-                                data: Object.values(data.chartData), // Combined totals
-                                borderColor: 'rgba(75, 192, 192, 1)',
-                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                borderWidth: 2,
-                                fill: false
-                            }
-                        ]
+            // Render the chart with new data
+            const ctx = document.getElementById('dailyLineChart').getContext('2d');
+            dailyLineChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: Object.keys(data.chartData), // Dates
+                    datasets: [
+                        {
+                            label: '{{ __('cashflow.daily_cashflow') }}',
+                            data: Object.values(data.chartData),
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderWidth: 2,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
                     },
-                    options: {
-                        responsive: true,
-                        interaction: {
-                            mode: 'index',
-                            intersect: false
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: '{{ __('cashflow.amount') }} (RM)', // Use Blade syntax to echo the translated text
-                                }
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '{{ __('cashflow.amount') }} (RM)'
                             }
-                        },
-                        plugins: {
-                            tooltip: {
-                                callbacks: {
-                                    label: function (context) {
-                                        const value = context.parsed.y;
-                                        const label = value >= 0 ? '{{ __('cashflow.income') }}' : '{{ __('cashflow.expenses') }}';
-                                        return `${label}: RM ${Math.abs(value).toFixed(2)}`;
-                                    }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    const value = context.parsed.y;
+                                    const label = value >= 0 ? '{{ __('cashflow.income') }}' : '{{ __('cashflow.expenses') }}';
+                                    return `${label}: RM ${Math.abs(value).toFixed(2)}`;
                                 }
                             }
                         }
                     }
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching daily cashflow data:', error);
+                }
             });
-    }
+        })
+        .catch(error => {
+            console.error('Error fetching daily cashflow data:', error);
+        });
+}
+
 </script>
 
 
