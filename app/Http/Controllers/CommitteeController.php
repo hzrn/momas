@@ -6,7 +6,6 @@ use App\Models\Committee;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
-use Illuminate\Http\Exceptions\PostTooLargeException;
 
 class CommitteeController extends Controller
 {

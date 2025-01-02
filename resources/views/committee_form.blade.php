@@ -45,10 +45,11 @@
                 <span class="text-danger">{!! $errors->first('address') !!}</span>
             </div>
 
+            <!-- Image Upload Field -->
             <div class="form-group mb-3">
                 <label for="photo">{{ __('committee.photo') }} (Format: JPEG, JPG, PNG / Max: 2MB)</label>
                 <div class="custom-file-input-wrapper">
-                    <input type="file" name="photo" id="photo" accept="image/jpeg,image/png" class="d-none">
+                    <input type="file" name="photo" id="photo" accept="image/*" class="d-none">
                     <button type="button" class="btn btn-secondary" id="choose-file-button">
                         {{ __('committee.choose_file') }}
                     </button>
@@ -57,6 +58,23 @@
                 <span id="file-error" class="text-danger d-none"></span>
             </div>
 
+            <style>
+                .custom-file-input-wrapper {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+
+                #file-name {
+                    font-style: italic;
+                    color: #6c757d;
+                }
+
+                #file-error {
+                    margin-top: 5px;
+                    font-size: 0.875em;
+                }
+            </style>
 
 
             <!-- Save Button -->
@@ -70,37 +88,26 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-    const fileInput = document.getElementById('photo');
     const chooseFileButton = document.getElementById('choose-file-button');
+    const photoInput = document.getElementById('photo');
     const fileNameDisplay = document.getElementById('file-name');
     const fileErrorDisplay = document.getElementById('file-error');
-
     const maxFileSize = 2 * 1024 * 1024; // 2MB
 
     chooseFileButton.addEventListener('click', () => {
         fileErrorDisplay.classList.add('d-none'); // Hide any previous error
-        fileInput.click(); // Trigger the hidden file input
+        photoInput.click(); // Trigger the hidden file input
     });
 
-    fileInput.addEventListener('change', () => {
-        const file = fileInput.files[0];
+    photoInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
 
         if (file) {
             // Validate file size
             if (file.size > maxFileSize) {
-                fileErrorDisplay.textContent = 'The file size exceeds the 2MB limit. Please choose a smaller file.';
+                fileErrorDisplay.textContent = 'The file size exceeds the 2MB limit. Please upload a smaller file.';
                 fileErrorDisplay.classList.remove('d-none');
-                fileInput.value = ''; // Clear the input
-                fileNameDisplay.textContent = '{{ __('committee.no_file') }}'; // Reset file name display
-                return;
-            }
-
-            // Validate file type
-            const validTypes = ['image/jpeg', 'image/png'];
-            if (!validTypes.includes(file.type)) {
-                fileErrorDisplay.textContent = 'Invalid file format. Please upload a JPEG, JPG, or PNG file.';
-                fileErrorDisplay.classList.remove('d-none');
-                fileInput.value = ''; // Clear the input
+                photoInput.value = ''; // Clear the input
                 fileNameDisplay.textContent = '{{ __('committee.no_file') }}'; // Reset file name display
                 return;
             }
