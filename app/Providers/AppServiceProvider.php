@@ -28,5 +28,9 @@ class AppServiceProvider extends ServiceProvider
         if (app()->environment('production')) {
             URL::forceScheme('https');
         }
+
+        ini_set('upload_max_filesize', env('UPLOAD_MAX_FILESIZE', '2M'));
+        ini_set('post_max_size', env('POST_MAX_SIZE', '8M'));
     }
+
 }
