@@ -242,19 +242,19 @@
     <script>
         let dailyLineChart = null;
 
-        // document.addEventListener('DOMContentLoaded', function () {
-        //     // Pass translated month names dynamically from the helper function
-        //     const monthNames = {!! json_encode(getMonthNames()) !!};
+        document.addEventListener('DOMContentLoaded', function () {
+            // Pass translated month names dynamically from the helper function
+            const monthNames = {!! json_encode(getMonthNames()) !!};
 
-        //     // Fetch the data for the current month when the page loads
-        //     fetchDailyCashflowData(new Date().getMonth() + 1, monthNames);
+            // Fetch the data for the current month when the page loads
+            fetchDailyCashflowData(new Date().getMonth() + 1, monthNames);
 
-        //     // Set up event listener for month selection change
-        //     document.getElementById('dailyMonthSelector').addEventListener('change', function () {
-        //         const selectedMonth = this.value; // Get the selected month
-        //         fetchDailyCashflowData(selectedMonth, monthNames);
-        //     });
-        // });
+            // Set up event listener for month selection change
+            document.getElementById('dailyMonthSelector').addEventListener('change', function () {
+                const selectedMonth = this.value; // Get the selected month
+                fetchDailyCashflowData(selectedMonth, monthNames);
+            });
+        });
 
         function fetchDailyCashflowData(month, monthNames) {
             const year = new Date().getFullYear(); // Get the current year
