@@ -110,8 +110,17 @@
     }
 </style>
 
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
-<script src="https://unpkg.com/@fullcalendar/core@6.1.8/index.global.min.js"></script>
+<!-- FullCalendar Styles -->
+<link href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.8/index.global.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.8/index.global.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/@fullcalendar/list@6.1.8/index.global.min.css" rel="stylesheet" />
+
+<!-- FullCalendar Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.8/index.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.8/index.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.8/index.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/list@6.1.8/index.global.min.js"></script>
+
 
 
 <!-- FullCalendar Script -->
@@ -119,7 +128,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     const calendarEl = document.getElementById('calendar');
     const calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
+        plugins: [dayGridPlugin], // Load the dayGrid plugin
+        initialView: 'dayGridMonth', // Set the default view to 'dayGridMonth'
         events: '{{ route('info.calendar') }}', // Fetch events dynamically
         eventMouseEnter: function (info) {
             const tooltip = document.createElement('div');
@@ -157,7 +167,6 @@ document.addEventListener('DOMContentLoaded', function () {
         },
     });
 
-    // Render Calendar
     calendar.render();
 
     // Show Modal and Render Calendar
@@ -171,6 +180,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
 </script>
 
 <!-- DataTable Script -->
