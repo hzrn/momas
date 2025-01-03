@@ -9,7 +9,8 @@
             {!! Form::model($committee, [
                 'route' => isset($committee->id) ? ['committee.update', $committee->id] : 'committee.store',
                 'method' => isset($committee->id) ? 'PUT' : 'POST',
-                'enctype' => 'multipart/form-data'
+                'enctype' => 'multipart/form-data',
+                'id' => 'committee-form'
             ]) !!}
 
             <!-- Name Field -->
@@ -54,12 +55,12 @@
                         {{ __('committee.choose_file') }}
                     </button>
                     <span id="file-name">{{ __('committee.no_file') }}</span>
+                    <span id="error-message" class="text-danger d-none"></span>
                 </div>
             </div>
 
-
             <!-- Save Button -->
-            {!! Form::submit(__('committee.save'), ['class' => 'btn btn-success']) !!}
+            {!! Form::submit(__('committee.save'), ['class' => 'btn btn-success', 'id' => 'submit-button']) !!}
 
             {!! Form::close() !!}
 
@@ -67,31 +68,55 @@
     </div>
 </div>
 
-<script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
-
-
 <script>
     document.getElementById('choose-file-button').addEventListener('click', function() {
         document.getElementById('photo').click();
     });
 
     document.getElementById('photo').addEventListener('change', function(event) {
-        const fileName = event.target.files.length ? event.target.files[0].name : '{{ __('committee.no_file') }}';
+        const file = event.target.files[0];
+        const fileName = file ? file.name : '{{ __('committee.no_file') }}';
         document.getElementById('file-name').textContent = fileName;
+
+        const maxSize = 2 * 1024 * 1024; // 2MB in bytes
+
+        if (file && file.size > maxSize) {
+            document.getElementById('error-message').textContent = '{{ __('committee.error_file_size') }}'; // Add custom error message
+            document.getElementById('error-message').classList.remove('d-none');
+            document.getElementById('submit-button').disabled = true; // Disable the submit button
+        } else {
+            document.getElementById('error-message').classList.add('d-none');
+            document.getElementById('submit-button').disabled = false; // Enable the submit button
+        }
+    });
+
+    // Handle form submission
+    document.getElementById('committee-form').addEventListener('submit', function(event) {
+        const fileInput = document.getElementById('photo');
+        const file = fileInput.files[0];
+        const maxSize = 2 * 1024 * 1024; // 2MB in bytes
+
+        if (file && file.size > maxSize) {
+            event.preventDefault();
+            alert('{{ __('committee.error_file_size') }}');
+        }
     });
 </script>
 
 <style>
     .custom-file-input-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
 
-#file-name {
-    font-style: italic;
-    color: #6c757d;
-}
+    #file-name {
+        font-style: italic;
+        color: #6c757d;
+    }
 
+    #error-message {
+        font-size: 0.9rem;
+    }
 </style>
 @endsection
