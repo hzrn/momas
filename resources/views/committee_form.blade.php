@@ -47,7 +47,7 @@
 
             <!-- Image Upload Field -->
             <div class="form-group mb-3">
-                <label for="photo">{{ __('committee.photo') }} (Format: JPEG, JPG, PNG / Max: 2MB)</label>
+                <label for="photo">{{ __('committee.photo') }} (Format : JPEG, JPG, PNG / Max : 2MB)</label>
                 <div class="custom-file-input-wrapper">
                     <input type="file" name="photo" id="photo" accept="image/*" class="d-none">
                     <button type="button" class="btn btn-secondary" id="choose-file-button">
@@ -55,26 +55,7 @@
                     </button>
                     <span id="file-name">{{ __('committee.no_file') }}</span>
                 </div>
-                <span id="file-error" class="text-danger d-none"></span>
             </div>
-
-            <style>
-                .custom-file-input-wrapper {
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
-                }
-
-                #file-name {
-                    font-style: italic;
-                    color: #6c757d;
-                }
-
-                #file-error {
-                    margin-top: 5px;
-                    font-size: 0.875em;
-                }
-            </style>
 
 
             <!-- Save Button -->
@@ -85,43 +66,6 @@
         </div>
     </div>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-    const chooseFileButton = document.getElementById('choose-file-button');
-    const photoInput = document.getElementById('photo');
-    const fileNameDisplay = document.getElementById('file-name');
-    const fileErrorDisplay = document.getElementById('file-error');
-    const maxFileSize = 2 * 1024 * 1024; // 2MB
-
-    chooseFileButton.addEventListener('click', () => {
-        fileErrorDisplay.classList.add('d-none'); // Hide any previous error
-        photoInput.click(); // Trigger the hidden file input
-    });
-
-    photoInput.addEventListener('change', (event) => {
-        const file = event.target.files[0];
-
-        if (file) {
-            // Validate file size
-            if (file.size > maxFileSize) {
-                fileErrorDisplay.textContent = 'The file size exceeds the 2MB limit. Please upload a smaller file.';
-                fileErrorDisplay.classList.remove('d-none');
-                photoInput.value = ''; // Clear the input
-                fileNameDisplay.textContent = '{{ __('committee.no_file') }}'; // Reset file name display
-                return;
-            }
-
-            // If valid, display the file name
-            fileNameDisplay.textContent = file.name;
-            fileErrorDisplay.classList.add('d-none'); // Hide any error
-        } else {
-            fileNameDisplay.textContent = '{{ __('committee.no_file') }}'; // No file selected
-        }
-    });
-});
-
-</script>
 
 <script>
     document.getElementById('choose-file-button').addEventListener('click', function() {
