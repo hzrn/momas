@@ -70,24 +70,27 @@
 <script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
 
 <script>
-    document.getElementById('choose-file-button').addEventListener('click', function() {
-        cloudinary.openUploadWidget({
-            cloud_name: 'dlbbfwofl',  // Replace with your Cloudinary cloud name
-            upload_preset: 'Momas-fyp',     // Use your Cloudinary upload preset
-            cropping: true,
-            max_file_size: 2 * 1024 * 1024, // 2MB limit
-            sources: ['local', 'url', 'camera', 'dropbox', 'facebook']
-        }, function(error, result) {
-            if (error) {
-                console.log(error);
-                alert("Error uploading image.");
-            } else {
-                console.log(result);
-                document.getElementById('file-name').textContent = result[0].original_filename;
-                document.getElementById('photo').value = result[0].secure_url; // Store URL in hidden field
-            }
-        });
+document.getElementById('choose-file-button').addEventListener('click', function() {
+    cloudinary.openUploadWidget({
+        cloud_name: 'dlbbfwofl', // Replace with your Cloudinary cloud name
+        upload_preset: 'Momas-fyp', // Use the upload preset you created in Cloudinary
+        cropping: true,
+        max_file_size: 2 * 1024 * 1024, // 2MB limit
+        sources: ['local', 'url', 'camera', 'dropbox', 'facebook']
+    }, function(error, result) {
+        if (error) {
+            console.log(error);
+            alert("Error uploading image.");
+        } else if (result && result[0]) {
+            console.log(result);
+            document.getElementById('file-name').textContent = result[0].original_filename;
+            document.getElementById('photo').value = result[0].secure_url; // Store the Cloudinary URL in a hidden field
+        } else {
+            console.error("No result returned from Cloudinary");
+        }
     });
+});
+
 </script>
 
 <style>
