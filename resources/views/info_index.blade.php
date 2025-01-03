@@ -97,7 +97,7 @@
     }
 
     #calendar {
-        height: auto;
+        height: 80%;
         min-height: 350px;
         max-width: 100%;
         margin: 0 auto;
@@ -109,16 +109,6 @@
         margin-bottom: 3px;
     }
 
-    #event-tooltip {
-        position: absolute;
-        background: rgba(0, 0, 0, 0.8);
-        color: #fff;
-        padding: 5px 10px;
-        border-radius: 5px;
-        font-size: 12px;
-        pointer-events: none;
-        z-index: 1000;
-    }
 </style>
 
 <!-- FullCalendar Styles -->
@@ -130,8 +120,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.8/index.global.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.8/index.global.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid@6.1.8/index.global.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/list@6.1.8/index.global.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.8/index.global.min.js"></script>
 
 
 <!-- FullCalendar Script -->
@@ -139,46 +128,37 @@
 document.addEventListener('DOMContentLoaded', function () {
     const calendarEl = document.getElementById('calendar');
     const calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth', // Set the default view
-
-        events: '{{ route('info.calendar') }}', // Fetch events dynamically
-        eventMouseEnter: function (info) {
-            // Create the tooltip
-            const tooltip = document.createElement('div');
-            tooltip.id = 'event-tooltip';
-            tooltip.innerHTML = `
-                <strong>${info.event.title}</strong><br>
-                ${info.event.extendedProps.description || 'No description available'}
-            `;
-            tooltip.style.position = 'absolute';
-            tooltip.style.background = 'rgba(0, 0, 0, 0.8)';
-            tooltip.style.color = '#fff';
-            tooltip.style.padding = '5px 10px';
-            tooltip.style.borderRadius = '5px';
-            tooltip.style.fontSize = '12px';
-            tooltip.style.pointerEvents = 'none';
-            tooltip.style.zIndex = '1000';
-
-            // Append tooltip to the body
-            document.body.appendChild(tooltip);
-
-            // Position the tooltip near the mouse pointer
-            info.el.addEventListener('mousemove', (e) => {
-                tooltip.style.top = e.pageY + 10 + 'px';
-                tooltip.style.left = e.pageX + 10 + 'px';
-            });
-        },
-        eventMouseLeave: function () {
-            // Remove the tooltip when the mouse leaves the event
-            const tooltip = document.getElementById('event-tooltip');
-            if (tooltip) {
-                tooltip.remove();
-            }
-        },
+        plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin], // Include necessary plugins
+        initialView: 'dayGridMonth', // Default view
         headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay',
+            start: 'today prev,next', // Left-aligned buttons
+            center: 'title', // Centered title
+            end: 'dayGridMonth,timeGridWeek,timeGridDay', // Right-aligned buttons
+        },
+        height: 'auto', // Adjust calendar height automatically
+        events: '{{ route('info.calendar') }}', // Fetch events dynamically
+        eventDidMount: function (info) {
+            // Attach Bootstrap popover
+            const popover = new bootstrap.Popover(info.el, {
+                title: info.event.title, // Event title
+                placement: 'auto', // Auto placement of the popover
+                trigger: 'manual', // Use manual trigger
+                content: `
+                    <p><strong>Description:</strong> ${info.event.extendedProps.description || 'No description available'}</p>
+                    <p><strong>Date:</strong> ${info.event.start.toLocaleDateString()}</p>
+                `,
+                html: true, // Allow HTML content
+            });
+
+            // Show popover on mouseenter
+            info.el.addEventListener('mouseenter', function () {
+                popover.show();
+            });
+
+            // Hide popover on mouseleave
+            info.el.addEventListener('mouseleave', function () {
+                popover.hide();
+            });
         },
     });
 
@@ -195,8 +175,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
-
-
 
 </script>
 
