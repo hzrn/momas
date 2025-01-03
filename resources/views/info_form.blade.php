@@ -56,7 +56,7 @@
                 </div>
             </div>
 
-            {!! Form::submit(__('info.save') , ['class' => 'btn btn-success', 'id' => 'submit-button']]) !!}
+            {!! Form::submit(__('info.save') , ['class' => 'btn btn-success', 'id' => 'submit-button']) !!}
 
             {!! Form::close() !!}
 
