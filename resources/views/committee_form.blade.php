@@ -49,13 +49,15 @@
             <div class="form-group mb-3">
                 <label for="photo">{{ __('committee.photo') }} (Format : JPEG, JPG, PNG / Max : 2MB)</label>
                 <div class="custom-file-input-wrapper">
-                    <input type="file" name="photo" id="photo" accept="image/*" class="d-none">
                     <button type="button" class="btn btn-secondary" id="choose-file-button">
                         {{ __('committee.choose_file') }}
                     </button>
                     <span id="file-name">{{ __('committee.no_file') }}</span>
                 </div>
             </div>
+
+            <!-- Hidden input to store Cloudinary URL -->
+            <input type="hidden" name="photo" id="photo">
 
 
             <!-- Save Button -->
@@ -67,6 +69,9 @@
     </div>
 </div>
 
+<script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
+
+
 <script>
     document.getElementById('choose-file-button').addEventListener('click', function() {
         document.getElementById('photo').click();
@@ -75,6 +80,28 @@
     document.getElementById('photo').addEventListener('change', function(event) {
         const fileName = event.target.files.length ? event.target.files[0].name : '{{ __('committee.no_file') }}';
         document.getElementById('file-name').textContent = fileName;
+    });
+</script>
+
+<script>
+    document.getElementById('choose-file-button').addEventListener('click', function() {
+        cloudinary.openUploadWidget({
+            cloud_name: 'your-cloud-name', // Replace with your Cloudinary cloud name
+            upload_preset: 'your-upload-preset', // Use the upload preset you created in Cloudinary
+            cropping: true,
+            max_file_size: 2 * 1024 * 1024, // 2MB limit
+            sources: ['local', 'url', 'camera', 'dropbox', 'facebook']
+        }, function(error, result) {
+            if (error) {
+                console.log(error);
+                alert("Error uploading image.");
+            } else {
+                console.log(result);
+                document.getElementById('file-name').textContent = result[0].original_filename;
+                // You can also store the uploaded URL in a hidden field or something
+                document.getElementById('photo').value = result[0].secure_url; // Store the Cloudinary URL in a hidden field
+            }
+        });
     });
 </script>
 

@@ -43,7 +43,7 @@ class CommitteeController extends Controller
             'phone_num' => 'required|string|max:15',
             'position' => 'required|string|max:255',
             'address' => 'required|string|max:500',
-            'photo' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+            'photo' => 'nullable|url',
         ]);
 
         if ($request->hasFile('photo')) {
@@ -88,7 +88,7 @@ class CommitteeController extends Controller
             'phone_num' => 'required|string|max:15',
             'position' => 'required|string|max:255',
             'address' => 'required|string|max:500',
-            'photo' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+            'photo' => 'nullable|url',
         ]);
 
         if ($request->hasFile('photo')) {
