@@ -78,6 +78,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/analysis', [InfoController::class, 'infoAnalysis'])->name('analysis');
             Route::get('/piechart', [InfoController::class, 'fetchPieChartData'])->name('piechart');
             Route::get('/linechart', [InfoController::class, 'lineChart'])->name('linechart');
+            Route::get('/info/calendar', [InfoController::class, 'calendarEvents'])->name('info.calendar');
         });
         Route::post('/reminders/remove-all', [InfoController::class, 'removeAll'])->name('reminders.removeAll');
         Route::resource('info', InfoController::class);

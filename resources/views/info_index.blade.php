@@ -1,10 +1,27 @@
 @extends('layouts.app_adminkit')
 
 @section('content')
+<div id="calendar-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ __('Event Calendar') }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="calendar"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <h1 class="h3 mb-3">{{ $title }}</h1>
 
 <a href="{{ route('info.create') }}" class="btn btn-primary mb-3">{{ __('info.add') }}</a>
 <a href="{{ route('info.exportPDF', request()->all()) }}" class="btn btn-secondary mb-3">{{ __('info.export_pdf') }}</a>
+<a href="#" id="show-calendar-btn" class="btn btn-info mb-3">{{ __('Show Calendar') }}</a>
 
 <div class="row">
     <div class="col-12">
@@ -75,6 +92,45 @@
         </div>
     </div>
 </div>
+
+<style>
+    #calendar {
+    max-width: 100%;
+    margin: 0 auto;
+}
+</style>
+
+<script>
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const calendarEl = document.getElementById('calendar');
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: '{{ route('info.calendar') }}', // Fetch events dynamically
+            eventClick: function (info) {
+                const event = info.event;
+                alert(`Title: ${event.title}\nDescription: ${event.extendedProps.description}\nDate: ${event.start.toISOString()}`);
+            },
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay',
+            },
+        });
+
+        // Show the modal and render the calendar
+        document.getElementById('show-calendar-btn').addEventListener('click', function (e) {
+            e.preventDefault();
+            $('#calendar-modal').modal('show');
+            calendar.render();
+        });
+    });
+</script>
+
 
 <script>
     $(document).ready(function() {

@@ -269,6 +269,27 @@ class InfoController extends Controller
         ]);
     }
 
+    public function calendarEvents(Request $request)
+    {
+        // Fetch events for the current mosque and month
+        $events = Info::where('mosque_id', auth()->user()->mosque_id)
+            ->whereYear('date', $request->input('year', now()->year))
+            ->whereMonth('date', $request->input('month', now()->month))
+            ->get();
+
+        // Format the events for FullCalendar
+        $formattedEvents = $events->map(function ($event) {
+            return [
+                'title' => $event->title,
+                'start' => $event->date->toDateString(),
+                'description' => $event->description,
+            ];
+        });
+
+        return response()->json($formattedEvents);
+    }
+
+
 
 
 
