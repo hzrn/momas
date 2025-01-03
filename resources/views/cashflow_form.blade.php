@@ -52,7 +52,7 @@
 
             <!-- Image Upload Field -->
             <div class="form-group mb-3">
-                <label for="photo">{{ __('cashflow.photo') }} (Format : JPEG, JPG, PNG)</label>
+                <label for="photo">{{ __('cashflow.photo') }} (Format: JPEG, JPG, PNG)</label>
                 <div class="custom-file-input-wrapper">
                     <input type="file" name="photo" id="photo" accept="image/*" class="d-none">
                     <button type="button" class="btn btn-secondary" id="choose-file-button">
@@ -126,6 +126,7 @@
     // Initial call to set correct options if the form is being edited
     document.addEventListener('DOMContentLoaded', updateCategoryDropdown);
 
+    // Photo Upload Logic
     document.getElementById('choose-file-button').addEventListener('click', function() {
         document.getElementById('photo').click();
     });
@@ -133,6 +134,16 @@
     document.getElementById('photo').addEventListener('change', function(event) {
         const fileName = event.target.files.length ? event.target.files[0].name : '{{ __('cashflow.no_file') }}';
         document.getElementById('file-name').textContent = fileName;
+
+        const maxSize = 1.9 * 1024 * 1024; // 1.9MB in bytes
+        const file = event.target.files[0];
+
+        if (file && file.size > maxSize) {
+            document.getElementById('error-message').textContent = '{{ __('committee.error_file_size') }}'; // Custom error message
+            document.getElementById('error-message').classList.remove('d-none');
+        } else {
+            document.getElementById('error-message').classList.add('d-none');
+        }
     });
 </script>
 
@@ -146,6 +157,12 @@
     #file-name {
         font-style: italic;
         color: #6c757d;
+    }
+
+    #error-message {
+        font-size: 0.9rem;
+        color: red;
+        display: none;
     }
 </style>
 @endsection

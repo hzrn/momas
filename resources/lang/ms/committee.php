@@ -50,5 +50,6 @@ return [
 
     //other
     'no_mosque' => 'Tiada masjid ditetapkan.',
+    'error_file_size' => 'Saiz fail melebihi 2MB.',
 
 ];

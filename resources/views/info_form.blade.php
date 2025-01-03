@@ -42,16 +42,16 @@
                 <span class="text-danger">{!! $errors->first('reminder_date') !!}</span>
             </div>
 
-
             <!-- Image Upload Field -->
             <div class="form-group mb-3">
-                <label for="photo">{{ __('info.photo') }} (Format : JPEG, JPG, PNG)</label>
+                <label for="photo">{{ __('info.photo') }} (Format: JPEG, JPG, PNG)</label>
                 <div class="custom-file-input-wrapper">
                     <input type="file" name="photo" id="photo" accept="image/*" class="d-none">
                     <button type="button" class="btn btn-secondary" id="choose-file-button">
                         {{ __('info.choose_file') }}
                     </button>
                     <span id="file-name">{{ __('info.no_file') }}</span>
+                    <span id="error-message" class="text-danger d-none"></span>
                 </div>
             </div>
 
@@ -69,23 +69,36 @@
     });
 
     document.getElementById('photo').addEventListener('change', function(event) {
-        const fileName = event.target.files.length ? event.target.files[0].name : '{{ __('info.no_file') }}';
+        const file = event.target.files[0];
+        const fileName = file ? file.name : '{{ __('info.no_file') }}';
         document.getElementById('file-name').textContent = fileName;
+
+        const maxSize = 1.9 * 1024 * 1024; // 1.9MB in bytes
+
+        if (file && file.size > maxSize) {
+            document.getElementById('error-message').textContent = '{{ __('committee.error_file_size') }}'; // Custom error message
+            document.getElementById('error-message').classList.remove('d-none');
+        } else {
+            document.getElementById('error-message').classList.add('d-none');
+        }
     });
 </script>
 
 <style>
     .custom-file-input-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
 
-#file-name {
-    font-style: italic;
-    color: #6c757d;
-}
+    #file-name {
+        font-style: italic;
+        color: #6c757d;
+    }
 
+    #error-message {
+        font-size: 0.9rem;
+    }
 </style>
 
 @endsection
