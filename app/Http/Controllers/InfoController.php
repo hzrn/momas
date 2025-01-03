@@ -272,7 +272,7 @@ class InfoController extends Controller
 
     public function calendarEvents()
     {
-        $events = Info::all(); // Fetch all events from the database
+        $events = Info::where('mosque_id', auth()->user()->mosque_id); // Fetch all events from the database
 
         $formattedEvents = $events->map(function ($event) {
             return [
