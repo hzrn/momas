@@ -281,8 +281,9 @@ class InfoController extends Controller
         $formattedEvents = $events->map(function ($event) {
             return [
                 'title' => $event->title,
-                'start' => \Carbon\Carbon::parse($event->date)->toIso8601String(), // Convert to ISO-8601 format
+                'start' => formatDate($event->date),
                 'description' => $event->description,
+               
             ];
         });
 

@@ -1,6 +1,7 @@
 @extends('layouts.app_adminkit')
 
 @section('content')
+<!-- Modal for Calendar -->
 <div id="calendar-modal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -16,10 +17,12 @@
 
 <h1 class="h3 mb-3">{{ $title }}</h1>
 
+<!-- Action Buttons -->
 <a href="{{ route('info.create') }}" class="btn btn-primary mb-3">{{ __('info.add') }}</a>
 <a href="{{ route('info.exportPDF', request()->all()) }}" class="btn btn-secondary mb-3">{{ __('info.export_pdf') }}</a>
 <a href="#" id="show-calendar-btn" class="btn btn-info mb-3">{{ __('Show Calendar') }}</a>
 
+<!-- Information Table -->
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -67,12 +70,9 @@
                                 <td>
                                     <a href="{{ route('info.show', $item->id) }}" class="btn btn-secondary mb-1">{{ __('info.details') }}</a>
                                     <a href="{{ route('info.edit', $item->id) }}" class="btn btn-warning mb-1">{{ __('info.edit') }}</a>
-
-                                    <!-- WhatsApp Share Button -->
                                     <a href="{{ $whatsappLink }}" target="_blank" class="btn btn-success mb-1">
                                         <i class="bi bi-whatsapp pe-1"></i>{{ __('info.share_whatsapp') }}
                                     </a>
-
                                     <form action="{{ route('info.destroy', $item->id) }}" method="POST" style="display:inline-block;">
                                         @csrf
                                         @method('DELETE')
@@ -80,8 +80,7 @@
                                     </form>
                                 </td>
                             </tr>
-                        @endforeach
-
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -90,23 +89,45 @@
     </div>
 </div>
 
+<!-- Custom Styles -->
 <style>
+    #calendar-modal .modal-dialog {
+        max-width: 90%;
+        margin: 1.75rem auto;
+    }
+
     #calendar {
-    max-width: 100%;
-    max-height: 100%;
-    margin: 0 auto;
-}
+        height: auto;
+        min-height: 500px;
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    .dataTables_length,
+    .dataTables_filter {
+        margin-top: 3px;
+        margin-bottom: 3px;
+    }
 </style>
 
+<!-- FullCalendar Script -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const calendarEl = document.getElementById('calendar');
         const calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
             events: '{{ route('info.calendar') }}', // Fetch events dynamically
-            eventClick: function (info) {
-                const event = info.event;
-                alert(`Title: ${event.title}\nDescription: ${event.extendedProps.description}\nDate: ${event.start.toISOString()}`);
+            eventDidMount: function (info) {
+                // Add a tooltip for each event
+                tippy(info.el, {
+                    content: `
+                        <strong>${info.event.title}</strong><br>
+                        ${info.event.extendedProps.description || 'No description available'}
+                    `,
+                    allowHTML: true,
+                    placement: 'top',
+                    arrow: true,
+                });
             },
             headerToolbar: {
                 left: 'prev,next today',
@@ -115,18 +136,25 @@
             },
         });
 
-        // Show the modal and render the calendar
+        // Render Calendar
+        calendar.render();
+
+        // Show Modal and Render Calendar
         document.getElementById('show-calendar-btn').addEventListener('click', function (e) {
             e.preventDefault();
-            $('#calendar-modal').modal('show');
-            calendar.render();
+            const calendarModal = document.getElementById('calendar-modal');
+            $(calendarModal).modal('show');
+
+            $(calendarModal).on('shown.bs.modal', function () {
+                calendar.render();
+            });
         });
     });
 </script>
 
-
+<!-- DataTable Script -->
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#info-table').DataTable({
             "paging": true,
             "lengthChange": true,
@@ -143,16 +171,4 @@
         });
     });
 </script>
-
-<style>
-    .dataTables_length {
-        margin-top: 3px;
-        margin-bottom: 3px;
-    }
-
-    .dataTables_filter {
-        margin-top: 3px;
-        margin-bottom: 3px;
-    }
-</style>
 @endsection
