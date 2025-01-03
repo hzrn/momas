@@ -7,6 +7,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
+
 class CommitteeController extends Controller
 {
     /**
@@ -130,18 +131,12 @@ class CommitteeController extends Controller
      */
     protected function storePhoto($image)
     {
-        try {
-            $result = Cloudinary::upload($image->getRealPath(), [
-                'upload_preset' => 'Momas-fyp',
-                'folder' => 'committees',
-            ]);
-            return $result->getSecurePath(); // Secure URL from Cloudinary
-        } catch (\Exception $e) {
-            // Handle error gracefully
-            return null; // Or log the error or return a custom message
-        }
-    }
+        $result = Cloudinary::upload($image->getRealPath(), [
+            'folder' => 'committees',
+        ]);
 
+        return $result->getSecurePath(); // Secure URL from Cloudinary
+    }
 
     /**
      * Delete photo from Cloudinary if it exists.
@@ -149,12 +144,9 @@ class CommitteeController extends Controller
     protected function deletePhoto($photo)
     {
         if ($photo) {
-            // Check if the URL is a Cloudinary URL
-            if (strpos($photo, 'cloudinary.com') !== false) {
-                // Extract the public ID from the URL
-                $publicId = basename(parse_url($photo, PHP_URL_PATH), '.' . pathinfo($photo, PATHINFO_EXTENSION));
-                Cloudinary::destroy('committees/' . $publicId);
-            }
+            // Extract the public ID from the URL
+            $publicId = basename(parse_url($photo, PHP_URL_PATH), '.' . pathinfo($photo, PATHINFO_EXTENSION));
+            Cloudinary::destroy('committees/' . $publicId);
         }
     }
 }
