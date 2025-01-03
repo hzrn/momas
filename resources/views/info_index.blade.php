@@ -128,8 +128,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     const calendarEl = document.getElementById('calendar');
     const calendar = new FullCalendar.Calendar(calendarEl, {
-        plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
-        initialView: 'dayGridMonth', // Set the default view to 'dayGridMonth'
+        plugins: [dayGridPlugin], // Load the dayGrid plugin
+        initialView: 'dayGridMonth', // Set the default view
         events: '{{ route('info.calendar') }}', // Fetch events dynamically
         eventMouseEnter: function (info) {
             const tooltip = document.createElement('div');
@@ -180,6 +180,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
 
 </script>
 
