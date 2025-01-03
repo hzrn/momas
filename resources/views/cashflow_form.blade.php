@@ -9,7 +9,7 @@
             {!! Form::model($cashflow, [
                 'route' => isset($cashflow->id) ? ['cashflow.update', $cashflow->id] : 'cashflow.store',
                 'method' => isset($cashflow->id) ? 'PUT' : 'POST',
-                'enctype' => 'multipart/form-data',  <!-- Added missing comma here -->
+                'enctype' => 'multipart/form-data',  <!-- Corrected: Added missing comma -->
                 'id' => 'cashflow-form'
             ]) !!}
 
@@ -60,11 +60,12 @@
                         {{ __('cashflow.choose_file') }}
                     </button>
                     <span id="file-name">{{ __('cashflow.no_file') }}</span>
+                    <span id="error-message" class="text-danger d-none"></span>
                 </div>
             </div>
 
             <!-- Save Button -->
-            {!! Form::submit(__('cashflow.save'), ['class' => 'btn btn-success']) !!}
+            {!! Form::submit(__('cashflow.save'), ['class' => 'btn btn-success', 'id' => 'submit-button']) !!}
 
             {!! Form::close() !!}
 
@@ -127,28 +128,23 @@
     // Initial call to set correct options if the form is being edited
     document.addEventListener('DOMContentLoaded', updateCategoryDropdown);
 
-</script>
-
-<script>
-        document.getElementById('choose-file-button').addEventListener('click', function() {
+    document.getElementById('choose-file-button').addEventListener('click', function() {
         document.getElementById('photo').click();
     });
 
     document.getElementById('photo').addEventListener('change', function(event) {
         const file = event.target.files[0];
-        const fileName = file ? file.name : '{{ __('committee.no_file') }}';
+        const fileName = file ? file.name : '{{ __('cashflow.no_file') }}';
         document.getElementById('file-name').textContent = fileName;
 
         const maxSize = 1.9 * 1024 * 1024; // 1.9MB in bytes
-
+        const errorMessageElement = document.getElementById('error-message');
 
         if (file && file.size > maxSize) {
-            document.getElementById('error-message').textContent = '{{ __('committee.error_file_size') }}'; // Add custom error message
-            document.getElementById('error-message').classList.remove('d-none');
-            document.getElementById('submit-button').disabled = true; // Disable the submit button
+            errorMessageElement.textContent = '{{ __('cashflow.error_file_size') }}'; // Custom error message
+            errorMessageElement.classList.remove('d-none');
         } else {
-            document.getElementById('error-message').classList.add('d-none');
-            document.getElementById('submit-button').disabled = false; // Enable the submit button
+            errorMessageElement.classList.add('d-none');
         }
     });
 
@@ -156,11 +152,11 @@
     document.getElementById('cashflow-form').addEventListener('submit', function(event) {
         const fileInput = document.getElementById('photo');
         const file = fileInput.files[0];
-        const maxSize = 2 * 1024 * 1024; // 2MB in bytes
+        const maxSize = 1.9 * 1024 * 1024; // 2MB in bytes
 
         if (file && file.size > maxSize) {
             event.preventDefault();
-            alert('{{ __('committee.error_file_size') }}');
+            alert('{{ __('cashflow.error_file_size') }}');
         }
     });
 </script>
@@ -180,7 +176,6 @@
     #error-message {
         font-size: 0.9rem;
         color: red;
-        display: none;
     }
 </style>
 @endsection
