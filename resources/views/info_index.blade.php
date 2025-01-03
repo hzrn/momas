@@ -109,6 +109,10 @@
         margin-bottom: 3px;
     }
 
+    .fc-event-time{
+        display: none;
+    }
+
 </style>
 
 <!-- FullCalendar Styles -->
