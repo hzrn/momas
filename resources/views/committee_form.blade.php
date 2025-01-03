@@ -47,7 +47,7 @@
 
             <!-- Image Upload Field -->
             <div class="form-group mb-3">
-                <label for="photo">{{ __('committee.photo') }} (Format : JPEG, JPG, PNG / Max : 2MB)</label>
+                <label for="photo">{{ __('committee.photo') }} (Format: JPEG, JPG, PNG / Max: 2MB)</label>
                 <div class="custom-file-input-wrapper">
                     <button type="button" class="btn btn-secondary" id="choose-file-button">
                         {{ __('committee.choose_file') }}
@@ -59,35 +59,21 @@
             <!-- Hidden input to store Cloudinary URL -->
             <input type="hidden" name="photo" id="photo">
 
-
             <!-- Save Button -->
             {!! Form::submit(__('committee.save'), ['class' => 'btn btn-success']) !!}
 
             {!! Form::close() !!}
-
         </div>
     </div>
 </div>
 
 <script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
 
-
-<script>
-    document.getElementById('choose-file-button').addEventListener('click', function() {
-        document.getElementById('photo').click();
-    });
-
-    document.getElementById('photo').addEventListener('change', function(event) {
-        const fileName = event.target.files.length ? event.target.files[0].name : '{{ __('committee.no_file') }}';
-        document.getElementById('file-name').textContent = fileName;
-    });
-</script>
-
 <script>
     document.getElementById('choose-file-button').addEventListener('click', function() {
         cloudinary.openUploadWidget({
-            cloud_name: 'your-cloud-name', // Replace with your Cloudinary cloud name
-            upload_preset: 'your-upload-preset', // Use the upload preset you created in Cloudinary
+            cloud_name: 'dlbbfwofl',  // Replace with your Cloudinary cloud name
+            upload_preset: 'Momas-fyp',     // Use your Cloudinary upload preset
             cropping: true,
             max_file_size: 2 * 1024 * 1024, // 2MB limit
             sources: ['local', 'url', 'camera', 'dropbox', 'facebook']
@@ -98,8 +84,7 @@
             } else {
                 console.log(result);
                 document.getElementById('file-name').textContent = result[0].original_filename;
-                // You can also store the uploaded URL in a hidden field or something
-                document.getElementById('photo').value = result[0].secure_url; // Store the Cloudinary URL in a hidden field
+                document.getElementById('photo').value = result[0].secure_url; // Store URL in hidden field
             }
         });
     });
@@ -107,15 +92,14 @@
 
 <style>
     .custom-file-input-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
 
-#file-name {
-    font-style: italic;
-    color: #6c757d;
-}
-
+    #file-name {
+        font-style: italic;
+        color: #6c757d;
+    }
 </style>
 @endsection

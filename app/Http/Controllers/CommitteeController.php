@@ -130,12 +130,16 @@ class CommitteeController extends Controller
      */
     protected function storePhoto($image)
     {
-        $result = Cloudinary::upload($image->getRealPath(), [
-            'upload_preset' => 'Momas-fyp',  // Use the "Momas-fyp" preset
-            'folder' => 'committees', // You can specify the folder here
-        ]);
-
-        return $result->getSecurePath(); // Secure URL from Cloudinary
+        try {
+            $result = Cloudinary::upload($image->getRealPath(), [
+                'upload_preset' => 'Momas-fyp',
+                'folder' => 'committees',
+            ]);
+            return $result->getSecurePath(); // Secure URL from Cloudinary
+        } catch (\Exception $e) {
+            // Handle error gracefully
+            return null; // Or log the error or return a custom message
+        }
     }
 
 
@@ -145,9 +149,12 @@ class CommitteeController extends Controller
     protected function deletePhoto($photo)
     {
         if ($photo) {
-            // Extract the public ID from the URL
-            $publicId = basename(parse_url($photo, PHP_URL_PATH), '.' . pathinfo($photo, PATHINFO_EXTENSION));
-            Cloudinary::destroy('committees/' . $publicId);
+            // Check if the URL is a Cloudinary URL
+            if (strpos($photo, 'cloudinary.com') !== false) {
+                // Extract the public ID from the URL
+                $publicId = basename(parse_url($photo, PHP_URL_PATH), '.' . pathinfo($photo, PATHINFO_EXTENSION));
+                Cloudinary::destroy('committees/' . $publicId);
+            }
         }
     }
 }
