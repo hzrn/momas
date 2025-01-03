@@ -127,8 +127,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const calendarEl = document.getElementById('calendar');
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-        plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin], // Include necessary plugins
+    const calendar = new FullCalendar.Calendar(calendarEl, { 
         initialView: 'dayGridMonth', // Default view
         headerToolbar: {
             start: 'today prev,next', // Left-aligned buttons
