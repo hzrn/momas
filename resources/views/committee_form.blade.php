@@ -78,7 +78,8 @@
         const fileName = file ? file.name : '{{ __('committee.no_file') }}';
         document.getElementById('file-name').textContent = fileName;
 
-        const maxSize = 2 * 1024 * 1024; // 2MB in bytes
+        const maxSize = 1.9 * 1024 * 1024; // 1.9MB in bytes
+
 
         if (file && file.size > maxSize) {
             document.getElementById('error-message').textContent = '{{ __('committee.error_file_size') }}'; // Add custom error message
