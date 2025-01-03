@@ -43,7 +43,7 @@ class CommitteeController extends Controller
             'phone_num' => 'required|string|max:15',
             'position' => 'required|string|max:255',
             'address' => 'required|string|max:500',
-            'photo' => 'nullable|url',
+            'photo' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
         ]);
 
         if ($request->hasFile('photo')) {
@@ -88,7 +88,7 @@ class CommitteeController extends Controller
             'phone_num' => 'required|string|max:15',
             'position' => 'required|string|max:255',
             'address' => 'required|string|max:500',
-            'photo' => 'nullable|url',
+            'photo' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
         ]);
 
         if ($request->hasFile('photo')) {
@@ -131,11 +131,13 @@ class CommitteeController extends Controller
     protected function storePhoto($image)
     {
         $result = Cloudinary::upload($image->getRealPath(), [
-            'folder' => 'committees',
+            'upload_preset' => 'Momas-fyp',  // Use the "Momas-fyp" preset
+            'folder' => 'committees', // You can specify the folder here
         ]);
 
         return $result->getSecurePath(); // Secure URL from Cloudinary
     }
+
 
     /**
      * Delete photo from Cloudinary if it exists.
