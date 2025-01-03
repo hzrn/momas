@@ -128,7 +128,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const calendarEl = document.getElementById('calendar');
     const calendar = new FullCalendar.Calendar(calendarEl, {
-        plugins: [dayGridPlugin], // Load the dayGrid plugin
+        plugins: [dayGridPlugin, timeGridPlugin, listPlugin],
         initialView: 'dayGridMonth', // Set the default view to 'dayGridMonth'
         events: '{{ route('info.calendar') }}', // Fetch events dynamically
         eventMouseEnter: function (info) {
