@@ -9,7 +9,8 @@
             {!! Form::model($info, [
                 'route' => isset($info->id) ? ['info.update', $info->id] : 'info.store',
                 'method' => isset($info->id) ? 'PUT' : 'POST',
-                'enctype' => 'multipart/form-data'
+                'enctype' => 'multipart/form-data',
+                'id' => 'info-form'
             ]) !!}
 
             <div class="form-group">
@@ -44,7 +45,7 @@
 
             <!-- Image Upload Field -->
             <div class="form-group mb-3">
-                <label for="photo">{{ __('info.photo') }} (Format: JPEG, JPG, PNG)</label>
+                <label for="photo">{{ __('info.photo') }} (Format : JPEG, JPG, PNG / Max : 2MB)</label>
                 <div class="custom-file-input-wrapper">
                     <input type="file" name="photo" id="photo" accept="image/*" class="d-none">
                     <button type="button" class="btn btn-secondary" id="choose-file-button">
@@ -75,11 +76,26 @@
 
         const maxSize = 1.9 * 1024 * 1024; // 1.9MB in bytes
 
+
         if (file && file.size > maxSize) {
-            document.getElementById('error-message').textContent = '{{ __('committee.error_file_size') }}'; // Custom error message
+            document.getElementById('error-message').textContent = '{{ __('info.error_file_size') }}'; // Add custom error message
             document.getElementById('error-message').classList.remove('d-none');
+            document.getElementById('submit-button').disabled = true; // Disable the submit button
         } else {
             document.getElementById('error-message').classList.add('d-none');
+            document.getElementById('submit-button').disabled = false; // Enable the submit button
+        }
+    });
+
+        // Handle form submission
+        document.getElementById('info-form').addEventListener('submit', function(event) {
+        const fileInput = document.getElementById('photo');
+        const file = fileInput.files[0];
+        const maxSize = 1.9 * 1024 * 1024; // 2MB in bytes
+
+        if (file && file.size > maxSize) {
+            event.preventDefault();
+            alert('{{ __('info.error_file_size') }}');
         }
     });
 </script>

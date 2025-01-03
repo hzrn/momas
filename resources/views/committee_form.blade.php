@@ -95,7 +95,7 @@
     document.getElementById('committee-form').addEventListener('submit', function(event) {
         const fileInput = document.getElementById('photo');
         const file = fileInput.files[0];
-        const maxSize = 2 * 1024 * 1024; // 2MB in bytes
+        const maxSize = 1.9 * 1024 * 1024; // 2MB in bytes
 
         if (file && file.size > maxSize) {
             event.preventDefault();

@@ -49,7 +49,7 @@ class CashflowController extends Controller
             'description' => 'nullable|string',
             'type' => 'required|in:income,expenses',
             'amount' => 'required|numeric|min:0.01',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif',
         ]);
 
         if ($request->hasFile('photo')) {
@@ -82,7 +82,7 @@ class CashflowController extends Controller
             'description' => 'nullable|string',
             'type' => 'required|in:income,expenses',
             'amount' => 'required|numeric|min:0.01',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif',
         ]);
 
         if ($request->hasFile('photo')) {
