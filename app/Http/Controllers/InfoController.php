@@ -276,7 +276,7 @@ class InfoController extends Controller
         $formattedEvents = $events->map(function ($event) {
             return [
                 'title' => $event->title, // Event title will be used as the tooltip
-                'start' => $event->date, // Start date
+                'start' => formatDate($event->date), // Start date
                 'description' => $event->description, // Add description if needed
             ];
         });
