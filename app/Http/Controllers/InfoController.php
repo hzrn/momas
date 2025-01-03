@@ -269,20 +269,23 @@ class InfoController extends Controller
         ]);
     }
 
+
     public function calendarEvents()
     {
-        $events = Info::all(); // Fetch all events from the `info` table
+        $events = Info::all(); // Fetch all events from the database
 
         $formattedEvents = $events->map(function ($event) {
             return [
-                'title' => $event->title, // Event title will be used as the tooltip
-                'start' => Carbon::parse($event->date)->toIso8601String(),
-                'description' => $event->description, // Add description if needed
+                'title' => $event->title, // Only the title will show in the calendar
+                'start' => Carbon::parse($event->date)->toIso8601String(), // ISO 8601 format for proper calendar rendering
+                'description' => $event->description, // For popover
+                'time' => Carbon::parse($event->date)->format('h:i A'), // Formatted time for popover
             ];
         });
 
         return response()->json($formattedEvents);
     }
+
 
 
 

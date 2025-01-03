@@ -127,7 +127,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const calendarEl = document.getElementById('calendar');
-    const calendar = new FullCalendar.Calendar(calendarEl, { 
+    const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth', // Default view
         headerToolbar: {
             start: 'today prev,next', // Left-aligned buttons
@@ -136,25 +136,28 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         height: 'auto', // Adjust calendar height automatically
         events: '{{ route('info.calendar') }}', // Fetch events dynamically
+
+        // Add popover to show additional event details
         eventDidMount: function (info) {
             // Attach Bootstrap popover
             const popover = new bootstrap.Popover(info.el, {
                 title: info.event.title, // Event title
                 placement: 'auto', // Auto placement of the popover
-                trigger: 'manual', // Use manual trigger
+                trigger: 'hover', // Trigger on hover
                 content: `
                     <p><strong>Description:</strong> ${info.event.extendedProps.description || 'No description available'}</p>
                     <p><strong>Date:</strong> ${info.event.start.toLocaleDateString()}</p>
+                    <p><strong>Time:</strong> ${info.event.extendedProps.time || ''}</p>
                 `,
                 html: true, // Allow HTML content
             });
 
-            // Show popover on mouseenter
+            // Show popover on hover
             info.el.addEventListener('mouseenter', function () {
                 popover.show();
             });
 
-            // Hide popover on mouseleave
+            // Hide popover when mouse leaves
             info.el.addEventListener('mouseleave', function () {
                 popover.hide();
             });
@@ -174,6 +177,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
 
 </script>
 
