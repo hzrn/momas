@@ -9,7 +9,7 @@
             {!! Form::model($cashflow, [
                 'route' => isset($cashflow->id) ? ['cashflow.update', $cashflow->id] : 'cashflow.store',
                 'method' => isset($cashflow->id) ? 'PUT' : 'POST',
-                'enctype' => 'multipart/form-data',  <!-- Corrected: Added missing comma -->
+                'enctype' => 'multipart/form-data',  
                 'id' => 'cashflow-form'
             ]) !!}
 
