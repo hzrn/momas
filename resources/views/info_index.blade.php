@@ -6,9 +6,6 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">{{ __('Event Calendar') }}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
             <div class="modal-body">
                 <div id="calendar"></div>
@@ -96,6 +93,7 @@
 <style>
     #calendar {
     max-width: 100%;
+    max-height: 100%;
     margin: 0 auto;
 }
 </style>
