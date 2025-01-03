@@ -113,38 +113,49 @@
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
-<link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css" />
-<script src="https://unpkg.com/@popperjs/core@2"></script>
-<script src="https://unpkg.com/tippy.js@6"></script>
-
 <!-- FullCalendar Script -->
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const calendarEl = document.getElementById('calendar');
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            events: '{{ route('info.calendar') }}', // Fetch events dynamically
-            eventDidMount: function (info) {
-                // Add a tooltip for each event
-                tippy(info.el, {
-                    content: `
-                        <strong>${info.event.title}</strong><br>
-                        ${info.event.extendedProps.description || 'No description available'}
-                    `,
-                    allowHTML: true,
-                    placement: 'top',
-                    arrow: true,
-                });
-            },
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay',
-            },
-        });
+const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    events: '{{ route('info.calendar') }}', // Fetch events dynamically
+    eventMouseEnter: function (info) {
+        const tooltip = document.createElement('div');
+        tooltip.id = 'event-tooltip';
+        tooltip.innerHTML = `
+            <strong>${info.event.title}</strong><br>
+            ${info.event.extendedProps.description || 'No description available'}
+        `;
+        tooltip.style.position = 'absolute';
+        tooltip.style.background = 'rgba(0, 0, 0, 0.8)';
+        tooltip.style.color = '#fff';
+        tooltip.style.padding = '5px 10px';
+        tooltip.style.borderRadius = '5px';
+        tooltip.style.fontSize = '12px';
+        tooltip.style.pointerEvents = 'none';
+        tooltip.style.zIndex = '1000';
 
-        // Render Calendar
-        calendar.render();
+        document.body.appendChild(tooltip);
+
+        info.el.addEventListener('mousemove', (e) => {
+            tooltip.style.top = e.pageY + 10 + 'px';
+            tooltip.style.left = e.pageX + 10 + 'px';
+        });
+    },
+    eventMouseLeave: function (info) {
+        const tooltip = document.getElementById('event-tooltip');
+        if (tooltip) {
+            tooltip.remove();
+        }
+    },
+    headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay',
+    },
+});
+
+calendar.render();
+
 
         // Show Modal and Render Calendar
         document.getElementById('show-calendar-btn').addEventListener('click', function (e) {
