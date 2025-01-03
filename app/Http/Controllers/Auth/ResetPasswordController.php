@@ -11,22 +11,15 @@ class ResetPasswordController extends Controller
     use ResetsPasswords;
 
     /**
-     * Where to redirect users after resetting their password.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/login'; // Redirect to login page
-
-    /**
-     * Send a response after the password is successfully reset.
+     * Render the login view after a successful password reset.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  string  $response
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     protected function sendResetResponse(Request $request, $response)
     {
-        return redirect()->route('login')->with('status', trans($response));
+        return view('auth.loginadminkit')->with('status', trans($response));
     }
 
     /**
@@ -39,7 +32,7 @@ class ResetPasswordController extends Controller
         return [
             'token' => 'required',
             'email' => 'required|email',
-            'password' => ['required', 'confirmed', 'string', 'min:1'], // Minimum 8 characters
+            'password' => ['required', 'confirmed', 'string', 'min:1'], // Adjust password requirements here
         ];
     }
 }
