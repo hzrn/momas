@@ -9,7 +9,8 @@
             {!! Form::model($item, [
                 'route' => isset($item->id) ? ['item.update', $item->id] : 'item.store',
                 'method' => isset($item->id) ? 'PUT' : 'POST',
-                'enctype' => 'multipart/form-data'
+                'enctype' => 'multipart/form-data',
+                'id' => 'item-form'
             ]) !!}
 
             <div class="form-group">
@@ -44,7 +45,7 @@
 
             <!-- Image Upload Field -->
             <div class="form-group mb-3">
-                <label for="photo">{{ __('item.photo') }} (Format: JPEG, JPG, PNG)</label>
+                <label for="photo">{{ __('item.photo') }} (Format : JPEG, JPG, PNG / Max : 2MB)</label>
                 <div class="custom-file-input-wrapper">
                     <input type="file" name="photo" id="photo" accept="image/*" class="d-none">
                     <button type="button" class="btn btn-secondary" id="choose-file-button">
@@ -55,7 +56,8 @@
                 </div>
             </div>
 
-            {!! Form::submit(__('item.save'), ['class' => 'btn btn-success']) !!}
+            <!-- Save Button -->
+            {!! Form::submit(__('item.save'), ['class' => 'btn btn-success', 'id' => 'submit-button']) !!}
 
             {!! Form::close() !!}
         </div>
@@ -73,13 +75,27 @@
         document.getElementById('file-name').textContent = fileName;
 
         const maxSize = 1.9 * 1024 * 1024; // 1.9MB in bytes
-        const errorMessageElement = document.getElementById('error-message');
+
 
         if (file && file.size > maxSize) {
-            errorMessageElement.textContent = '{{ __('committee.error_file_size') }}'; // Custom error message
-            errorMessageElement.classList.remove('d-none');
+            document.getElementById('error-message').textContent = '{{ __('item.error_file_size') }}'; // Add custom error message
+            document.getElementById('error-message').classList.remove('d-none');
+            document.getElementById('submit-button').disabled = true; // Disable the submit button
         } else {
-            errorMessageElement.classList.add('d-none');
+            document.getElementById('error-message').classList.add('d-none');
+            document.getElementById('submit-button').disabled = false; // Enable the submit button
+        }
+    });
+
+    // Handle form submission
+    document.getElementById('item-form').addEventListener('submit', function(event) {
+        const fileInput = document.getElementById('photo');
+        const file = fileInput.files[0];
+        const maxSize = 1.9 * 1024 * 1024; // 2MB in bytes
+
+        if (file && file.size > maxSize) {
+            event.preventDefault();
+            alert('{{ __('item.error_file_size') }}');
         }
     });
 </script>
