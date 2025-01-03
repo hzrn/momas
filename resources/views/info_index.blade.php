@@ -108,6 +108,17 @@
         margin-top: 3px;
         margin-bottom: 3px;
     }
+
+    #event-tooltip {
+        position: absolute;
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 12px;
+        pointer-events: none;
+        z-index: 1000;
+    }
 </style>
 
 <!-- FullCalendar Styles -->
@@ -128,10 +139,11 @@
 document.addEventListener('DOMContentLoaded', function () {
     const calendarEl = document.getElementById('calendar');
     const calendar = new FullCalendar.Calendar(calendarEl, {
-         // Load the dayGrid plugin
         initialView: 'dayGridMonth', // Set the default view
+
         events: '{{ route('info.calendar') }}', // Fetch events dynamically
         eventMouseEnter: function (info) {
+            // Create the tooltip
             const tooltip = document.createElement('div');
             tooltip.id = 'event-tooltip';
             tooltip.innerHTML = `
@@ -147,14 +159,17 @@ document.addEventListener('DOMContentLoaded', function () {
             tooltip.style.pointerEvents = 'none';
             tooltip.style.zIndex = '1000';
 
+            // Append tooltip to the body
             document.body.appendChild(tooltip);
 
+            // Position the tooltip near the mouse pointer
             info.el.addEventListener('mousemove', (e) => {
                 tooltip.style.top = e.pageY + 10 + 'px';
                 tooltip.style.left = e.pageX + 10 + 'px';
             });
         },
-        eventMouseLeave: function (info) {
+        eventMouseLeave: function () {
+            // Remove the tooltip when the mouse leaves the event
             const tooltip = document.getElementById('event-tooltip');
             if (tooltip) {
                 tooltip.remove();
@@ -180,6 +195,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
 
 
 </script>
