@@ -10,6 +10,7 @@
                 'route' => isset($cashflow->id) ? ['cashflow.update', $cashflow->id] : 'cashflow.store',
                 'method' => isset($cashflow->id) ? 'PUT' : 'POST',
                 'enctype' => 'multipart/form-data'
+                'id' => 'cashflow-form'
             ]) !!}
 
             <div class="form-group">
@@ -126,23 +127,40 @@
     // Initial call to set correct options if the form is being edited
     document.addEventListener('DOMContentLoaded', updateCategoryDropdown);
 
-    // Photo Upload Logic
-    document.getElementById('choose-file-button').addEventListener('click', function() {
+</script>
+
+<script>
+        document.getElementById('choose-file-button').addEventListener('click', function() {
         document.getElementById('photo').click();
     });
 
     document.getElementById('photo').addEventListener('change', function(event) {
-        const fileName = event.target.files.length ? event.target.files[0].name : '{{ __('cashflow.no_file') }}';
+        const file = event.target.files[0];
+        const fileName = file ? file.name : '{{ __('committee.no_file') }}';
         document.getElementById('file-name').textContent = fileName;
 
         const maxSize = 1.9 * 1024 * 1024; // 1.9MB in bytes
-        const file = event.target.files[0];
+
 
         if (file && file.size > maxSize) {
-            document.getElementById('error-message').textContent = '{{ __('committee.error_file_size') }}'; // Custom error message
+            document.getElementById('error-message').textContent = '{{ __('committee.error_file_size') }}'; // Add custom error message
             document.getElementById('error-message').classList.remove('d-none');
+            document.getElementById('submit-button').disabled = true; // Disable the submit button
         } else {
             document.getElementById('error-message').classList.add('d-none');
+            document.getElementById('submit-button').disabled = false; // Enable the submit button
+        }
+    });
+
+    // Handle form submission
+    document.getElementById('cashflow-form').addEventListener('submit', function(event) {
+        const fileInput = document.getElementById('photo');
+        const file = fileInput.files[0];
+        const maxSize = 2 * 1024 * 1024; // 2MB in bytes
+
+        if (file && file.size > maxSize) {
+            event.preventDefault();
+            alert('{{ __('committee.error_file_size') }}');
         }
     });
 </script>

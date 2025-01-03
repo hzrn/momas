@@ -50,6 +50,6 @@ return [
 
     //other
     'no_mosque' => 'No mosque assigned.',
-    'error_file_size' => 'File size too large.',
+    'error_file_size' => 'File size exceed 2MB.',
 
 ];
