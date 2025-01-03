@@ -51,24 +51,24 @@ class InfoController extends Controller
 
         Info::create($requestData);
 
-        // Add reminder to session using the date field with formatting
-        if ($request->has('date') && $request->has('reminder_date')) {
+        if ($request->has('date') && $request->filled('reminder_date')) {
             // Parse the date and reminder_date from the request
             $eventDate = Carbon::parse($requestData['date']);
             $reminderDate = Carbon::parse($requestData['reminder_date']);
 
-            // Check if the current date is equal to the reminder_date
-            if ($reminderDate->isToday() && $reminderDate->isSameDay(Carbon::now())) {
+            // Check if the reminder_date is today
+            if ($reminderDate->isToday()) {
                 // Format the event date for display
                 $formattedEventDate = $eventDate->format('j/n/Y g:i A');
 
+                // Push the reminder to the session
                 session()->push('reminders', __("info.event_reminder", [
                     'title' => $requestData['title'],
                     'date' => $formattedEventDate,
                 ]));
-
             }
         }
+
 
 
         flash(__('info.saved'))->success();
@@ -117,23 +117,24 @@ class InfoController extends Controller
 
         $info->update($requestData + ['updated_by' => auth()->id()]);
 
-        // Add reminder to session using the date field with formatting
-        if ($request->has('date') && $request->has('reminder_date')) {
+        if ($request->has('date') && $request->filled('reminder_date')) {
             // Parse the date and reminder_date from the request
             $eventDate = Carbon::parse($requestData['date']);
             $reminderDate = Carbon::parse($requestData['reminder_date']);
 
-            // Check if the current date is equal to the reminder_date
-            if ($reminderDate->isToday() && $reminderDate->isSameDay(Carbon::now())) {
+            // Check if the reminder_date is today
+            if ($reminderDate->isToday()) {
                 // Format the event date for display
                 $formattedEventDate = $eventDate->format('j/n/Y g:i A');
 
+                // Push the reminder to the session
                 session()->push('reminders', __("info.event_reminder", [
                     'title' => $requestData['title'],
                     'date' => $formattedEventDate,
                 ]));
             }
         }
+
 
         flash(__('info.updated'))->success();
         return redirect()->route('info.index');
