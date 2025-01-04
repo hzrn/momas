@@ -57,6 +57,8 @@ class CommitteeController extends Controller
         }
 
         Committee::create($requestData);
+        // Invalidate the cache
+        Cache::forget('committees');
         flash(__('committee.saved'))->success();
         return redirect()->route('committee.index');
     }
@@ -102,6 +104,9 @@ class CommitteeController extends Controller
         }
 
         $committee->update($validatedData);
+        // Invalidate the cache
+        Cache::forget('committees');
+        Cache::forget("committee_{$committee->id}");
         flash(__('committee.updated'))->success();
         return redirect()->route('committee.index');
     }
@@ -113,6 +118,9 @@ class CommitteeController extends Controller
     {
         $this->deletePhoto($committee->photo);
         $committee->delete();
+
+        Cache::forget('committees');
+        Cache::forget("committee_{$committee->id}");
 
         flash(__('committee.deleted'))->success();
         return redirect()->route('committee.index');
