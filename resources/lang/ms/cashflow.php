@@ -107,8 +107,10 @@ return [
     'category_breakdown' => 'Pecahan Kategori',
     'income_categories' => 'Kategori Sumbangan',
     'expenses_categories' => 'Kategori Perbelanjaan',
-    'currency' => 'RM'
-    
+    'currency' => 'RM',
+    'error_file_size' => 'Saiz fail melebihi 2MB.',
+    'error_file_type' => 'Jenis fail tidak diterima.',
+
 
 
 ];

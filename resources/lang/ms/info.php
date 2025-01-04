@@ -65,6 +65,8 @@ return [
     'show_calendar' => 'Buka Kalendar',
     'event_calendar' => 'Kalendar Acara',
     'select_a_category' => 'Pilih Kategori',
+    'error_file_size' => 'Saiz fail melebihi 2MB.',
+    'error_file_type' => 'Jenis fail tidak diterima.',
 
 
 ];

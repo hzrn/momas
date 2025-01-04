@@ -75,7 +75,16 @@
         document.getElementById('file-name').textContent = fileName;
 
         const maxSize = 1.9 * 1024 * 1024; // 1.9MB in bytes
+        const validExtensions = ['jpg', 'jpeg', 'png'];
 
+        // Validate file type
+        const fileExtension = fileName.split('.').pop().toLowerCase();
+        if (file && !validExtensions.includes(fileExtension)) {
+            document.getElementById('error-message').textContent = '{{ __('info.error_file_type') }}'; // Add custom error message
+            document.getElementById('error-message').classList.remove('d-none');
+            document.getElementById('submit-button').disabled = true; // Disable the submit button
+            return;
+        }
 
         if (file && file.size > maxSize) {
             document.getElementById('error-message').textContent = '{{ __('info.error_file_size') }}'; // Add custom error message
@@ -87,11 +96,21 @@
         }
     });
 
-        // Handle form submission
-        document.getElementById('info-form').addEventListener('submit', function(event) {
+    // Handle form submission
+    document.getElementById('info-form').addEventListener('submit', function(event) {
         const fileInput = document.getElementById('photo');
         const file = fileInput.files[0];
-        const maxSize = 1.9 * 1024 * 1024; // 2MB in bytes
+        const maxSize = 1.9 * 1024 * 1024; // 1.9MB in bytes
+        const validExtensions = ['jpg', 'jpeg', 'png'];
+
+        const fileName = file ? file.name : '';
+        const fileExtension = fileName.split('.').pop().toLowerCase();
+
+        if (file && !validExtensions.includes(fileExtension)) {
+            event.preventDefault();
+            alert('{{ __('info.error_file_type') }}');
+            return;
+        }
 
         if (file && file.size > maxSize) {
             event.preventDefault();
@@ -99,6 +118,7 @@
         }
     });
 </script>
+
 
 <style>
     .custom-file-input-wrapper {

@@ -64,6 +64,8 @@ return [
     'summary' => 'Summary',
     'all_months' => 'All Months',
     'total_item' => 'Total Item',
+    'error_file_size' => 'File size exceed 2MB.',
+    'error_file_type' => 'File type not allowed.',
 
 
 ];

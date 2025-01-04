@@ -107,6 +107,8 @@ return [
     'category_breakdown' => 'Category Breakdown',
     'income_categories' => 'Donations/Income Categories',
     'expenses_categories' => 'Expenses Categories',
-    'currency' => 'RM'
-    
+    'currency' => 'RM',
+    'error_file_size' => 'File size exceed 2MB.',
+    'error_file_type' => 'File type not allowed.',
+
 ];

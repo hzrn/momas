@@ -65,5 +65,7 @@ return [
     'summary' => 'Ringkasan',
     'all_months' => 'Semua Bulan',
     'total_item' => 'Jumlah Inventori',
+    'error_file_size' => 'Saiz fail melebihi 2MB.',
+    'error_file_type' => 'Jenis fail tidak diterima.',
 
 ];

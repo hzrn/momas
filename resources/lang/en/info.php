@@ -65,6 +65,8 @@ return [
     'show_calendar' => 'Show Calendar',
     'event_calendar' => 'Event Calendar',
     'select_a_category' => 'Select a category',
+    'error_file_size' => 'File size exceed 2MB.',
+    'error_file_type' => 'File type not allowed.',
 
 
 
