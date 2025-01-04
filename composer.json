@@ -18,7 +18,8 @@
         "laravel/ui": "^4.5",
         "laravelcollective/html": "^6.4",
         "league/commonmark": "^2.5",
-        "mckenziearts/laravel-notify": "^2.5"
+        "mckenziearts/laravel-notify": "^2.5",
+        "predis/predis": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.13",
