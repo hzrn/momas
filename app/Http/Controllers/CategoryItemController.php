@@ -12,10 +12,16 @@ class CategoryItemController extends Controller
      */
     public function index()
     {
-        $categoryitem = CategoryItem::MosqueUser()->orderBy('created_at', 'desc')->get();;
+        $categoryitem = cache()->remember('category_items', 60, function () {
+            return CategoryItem::MosqueUser()
+                ->orderBy('created_at', 'desc')
+                ->get();
+        });
+
         $title = __('categoryitem.title');
         return view('categoryitem_index', compact('categoryitem', 'title'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -36,34 +42,15 @@ class CategoryItemController extends Controller
             'name' => 'required',
         ]);
 
-        $categoryitem = CategoryItem::create($requestData);
+        CategoryItem::create($requestData);
+
+        // Clear cache
+        cache()->forget('category_items');
+
         flash(__('categoryitem.saved'))->success();
         return redirect()->route('categoryitem.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        $categoryitem = CategoryItem::findOrFail($id);
-        $title = __('categoryitem.title');
-        return view('categoryitem_form', compact('categoryitem', 'title'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        $categoryitem = CategoryItem::findOrFail($id);
-        $title = __('categoryitem.edit_title');
-        return view('categoryitem_form', compact('categoryitem', 'title'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $id)
     {
         $categoryitem = CategoryItem::findOrFail($id);
@@ -73,18 +60,24 @@ class CategoryItemController extends Controller
         ]);
 
         $categoryitem->update($validatedData);
+
+        // Clear cache
+        cache()->forget('category_items');
+
         flash(__('categoryitem.updated'))->success();
         return redirect()->route('categoryitem.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
         $categoryitem = CategoryItem::findOrFail($id);
         $categoryitem->delete();
+
+        // Clear cache
+        cache()->forget('category_items');
+
         flash(__('categoryitem.deleted'))->success();
         return redirect()->route('categoryitem.index');
     }
+
 }
