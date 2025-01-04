@@ -222,12 +222,11 @@
 
             <main class="content">
                 <div class="container-fluid p-0">
-                    @if (session('flash'))
-                        {{ session('flash') }}
-                    @endif
+                    @include('flash::message')
                     @yield('content')
                 </div>
             </main>
+
         </div>
 
         <!-- Optional Custom CSS -->
@@ -256,6 +255,14 @@
 
     <!-- Feather Icons -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"></script>
+
+    <script>
+        // Auto-hide flash messages after 3 seconds
+        $(document).ready(function() {
+            $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
+        });
+    </script>
+
     <script>
         // Initialize Feather icons
         feather.replace();
