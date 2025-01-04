@@ -76,27 +76,52 @@
     document.getElementById('photo').addEventListener('change', function(event) {
         const file = event.target.files[0];
         const fileName = file ? file.name : '{{ __('committee.no_file') }}';
+        const errorMessageElement = document.getElementById('error-message');
+        const submitButton = document.getElementById('submit-button');
+
         document.getElementById('file-name').textContent = fileName;
 
         const maxSize = 1.9 * 1024 * 1024; // 1.9MB in bytes
+        const validExtensions = ['jpg', 'jpeg', 'png'];
 
-
-        if (file && file.size > maxSize) {
-            document.getElementById('error-message').textContent = '{{ __('committee.error_file_size') }}'; // Add custom error message
-            document.getElementById('error-message').classList.remove('d-none');
-            document.getElementById('submit-button').disabled = true; // Disable the submit button
-        } else {
-            document.getElementById('error-message').classList.add('d-none');
-            document.getElementById('submit-button').disabled = false; // Enable the submit button
+        // Validate file type
+        const fileExtension = fileName.split('.').pop().toLowerCase();
+        if (file && !validExtensions.includes(fileExtension)) {
+            errorMessageElement.textContent = '{{ __('committee.error_file_type') }}'; // Custom error message for invalid type
+            errorMessageElement.classList.remove('d-none');
+            submitButton.disabled = true; // Disable the submit button
+            return;
         }
+
+        // Validate file size
+        if (file && file.size > maxSize) {
+            errorMessageElement.textContent = '{{ __('committee.error_file_size') }}'; // Custom error message for file size
+            errorMessageElement.classList.remove('d-none');
+            submitButton.disabled = true; // Disable the submit button
+            return;
+        }
+
+        // Clear error and enable submit button if validation passes
+        errorMessageElement.classList.add('d-none');
+        submitButton.disabled = false;
     });
 
     // Handle form submission
     document.getElementById('committee-form').addEventListener('submit', function(event) {
         const fileInput = document.getElementById('photo');
         const file = fileInput.files[0];
-        const maxSize = 1.9 * 1024 * 1024; // 2MB in bytes
+        const maxSize = 1.9 * 1024 * 1024; // 1.9MB in bytes
+        const validExtensions = ['jpg', 'jpeg', 'png'];
 
+        // Validate file type again on submission
+        const fileName = file ? file.name : '';
+        const fileExtension = fileName.split('.').pop().toLowerCase();
+        if (file && !validExtensions.includes(fileExtension)) {
+            event.preventDefault();
+            alert('{{ __('committee.error_file_type') }}');
+        }
+
+        // Validate file size again on submission
         if (file && file.size > maxSize) {
             event.preventDefault();
             alert('{{ __('committee.error_file_size') }}');
@@ -118,6 +143,7 @@
 
     #error-message {
         font-size: 0.9rem;
+        color: red;
     }
 </style>
 @endsection
