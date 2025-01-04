@@ -15,8 +15,8 @@
 
             <div class="form-group">
                 {!! Form::label('date', __('cashflow.date')) !!}
-                {!! Form::date('date', $cashflow->date ?? now(), ['class' => 'form-control mb-3', 'required']) !!}
-                <span class="text-danger">{!! $errors->first('date') !!}</span>
+                {!! Form::date('date', $cashflow->date ?? now(), ['class' => 'form-control', 'required']) !!}
+                <span class="text-danger mb-3">{!! $errors->first('date') !!}</span>
             </div>
 
             <div class="form-group mb-3">
@@ -135,6 +135,62 @@
 
     document.addEventListener('DOMContentLoaded', updateCategoryDropdown);
 </script>
+
+<script>
+    document.getElementById('choose-file-button').addEventListener('click', function() {
+        document.getElementById('photo').click();
+    });
+
+    document.getElementById('photo').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        const fileName = file ? file.name : '{{ __('cashflow.no_file') }}';
+        document.getElementById('file-name').textContent = fileName;
+
+        const maxSize = 1.9 * 1024 * 1024; // 1.9MB in bytes
+        const validExtensions = ['jpg', 'jpeg', 'png'];
+
+        // Validate file type
+        const fileExtension = fileName.split('.').pop().toLowerCase();
+        if (file && !validExtensions.includes(fileExtension)) {
+            document.getElementById('error-message').textContent = '{{ __('cashflow.error_file_type') }}'; // Add custom error message
+            document.getElementById('error-message').classList.remove('d-none');
+            document.getElementById('submit-button').disabled = true; // Disable the submit button
+            return;
+        }
+
+        if (file && file.size > maxSize) {
+            document.getElementById('error-message').textContent = '{{ __('cashflow.error_file_size') }}'; // Add custom error message
+            document.getElementById('error-message').classList.remove('d-none');
+            document.getElementById('submit-button').disabled = true; // Disable the submit button
+        } else {
+            document.getElementById('error-message').classList.add('d-none');
+            document.getElementById('submit-button').disabled = false; // Enable the submit button
+        }
+    });
+
+    // Handle form submission
+    document.getElementById('cashflow-form').addEventListener('submit', function(event) {
+        const fileInput = document.getElementById('photo');
+        const file = fileInput.files[0];
+        const maxSize = 1.9 * 1024 * 1024; // 1.9MB in bytes
+        const validExtensions = ['jpg', 'jpeg', 'png'];
+
+        const fileName = file ? file.name : '';
+        const fileExtension = fileName.split('.').pop().toLowerCase();
+
+        if (file && !validExtensions.includes(fileExtension)) {
+            event.preventDefault();
+            alert('{{ __('cashflow.error_file_type') }}');
+            return;
+        }
+
+        if (file && file.size > maxSize) {
+            event.preventDefault();
+            alert('{{ __('cashflow.error_file_size') }}');
+        }
+    });
+</script>
+
 
 <style>
     .custom-file-input-wrapper {
