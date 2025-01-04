@@ -6,21 +6,17 @@ use App\Models\Committee;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
-use Illuminate\Support\Facades\Cache;
+
 
 class CommitteeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-
     public function index()
     {
-        // Cache the committee list for 10 minutes
-        $committee = Cache::remember('committees', 10 * 60, function () {
-            return Committee::MosqueUser ()->orderBy('created_at', 'desc')->get();
-        });
-
+        // Retrieve committees ordered by latest created first
+        $committee = Committee::MosqueUser()->orderBy('created_at', 'desc')->get();
         return view('committee_index', [
             'committee' => $committee,
             'title' => __('committee.title'),
@@ -57,8 +53,6 @@ class CommitteeController extends Controller
         }
 
         Committee::create($requestData);
-        // Invalidate the cache
-        Cache::forget('committees');
         flash(__('committee.saved'))->success();
         return redirect()->route('committee.index');
     }
@@ -104,9 +98,6 @@ class CommitteeController extends Controller
         }
 
         $committee->update($validatedData);
-        // Invalidate the cache
-        Cache::forget('committees');
-        Cache::forget("committee_{$committee->id}");
         flash(__('committee.updated'))->success();
         return redirect()->route('committee.index');
     }
@@ -118,9 +109,6 @@ class CommitteeController extends Controller
     {
         $this->deletePhoto($committee->photo);
         $committee->delete();
-
-        Cache::forget('committees');
-        Cache::forget("committee_{$committee->id}");
 
         flash(__('committee.deleted'))->success();
         return redirect()->route('committee.index');
