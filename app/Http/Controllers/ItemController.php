@@ -103,7 +103,7 @@ class ItemController extends Controller
 
         if ($request->hasFile('photo')) {
             $this->deletePhoto($item->photo); // Delete old photo from Cloudinary
-            $validatedData['photo'] = $this->storePhoto($request->file('photo'));
+            $requestData['photo'] = $this->storePhoto($request->file('photo'));
         }
 
         $item->update($requestData + ['updated_by' => auth()->id()]);

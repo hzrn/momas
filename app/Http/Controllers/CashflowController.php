@@ -76,7 +76,7 @@ class CashflowController extends Controller
 
     public function update(Request $request, Cashflow $cashflow)
     {
-        $validatedData = $request->validate([
+        $requestData = $request->validate([
             'date' => 'required|date',
             'category' => 'nullable|string',
             'description' => 'nullable|string',
@@ -87,10 +87,10 @@ class CashflowController extends Controller
 
         if ($request->hasFile('photo')) {
             $this->deletePhoto($cashflow->photo); // Delete old photo from Cloudinary
-            $validatedData['photo'] = $this->storePhoto($request->file('photo'));
+            $requestData['photo'] = $this->storePhoto($request->file('photo'));
         }
 
-        $cashflow->update($validatedData + ['updated_by' => auth()->id()]);
+        $cashflow->update($requestData + ['updated_by' => auth()->id()]);
         // $this->updateTotalAmount($cashflow->mosque_id);
 
         flash(__('cashflow.updated'))->success();

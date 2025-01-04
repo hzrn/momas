@@ -48,7 +48,7 @@
                             <td>{{ $loop->iteration }}</td>
                             <td class="d-none">{{ $item->mosque_id }}</td>
                             <td>{!! $formattedDate !!}</td>
-                            <td>{{ __('cashflow.' . strtolower($item->category)) }}</td>
+                            <td>{{ __('cashflow.'.strtolower($item->category)) }}</td>
                             <td>{{ $item->description ?? '-' }}</td>
                             <td>{{ $item->type == 'income' ? formatRM($item->amount) : '-' }}</td>
                             <td>{{ $item->type == 'expenses' ? formatRM($item->amount) : '-' }}</td>
