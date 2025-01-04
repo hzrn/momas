@@ -6,7 +6,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">{{ __('Event Calendar') }}</h5>
+                <h5 class="modal-title">{{ __('info.event_calendar') }}</h5>
             </div>
             <div class="modal-body">
                 <div id="calendar"></div>
@@ -20,7 +20,7 @@
 <!-- Action Buttons -->
 <a href="{{ route('info.create') }}" class="btn btn-primary mb-3">{{ __('info.add') }}</a>
 <a href="{{ route('info.exportPDF', request()->all()) }}" class="btn btn-secondary mb-3">{{ __('info.export_pdf') }}</a>
-<a href="#" id="show-calendar-btn" class="btn btn-info mb-3">{{ __('Show Calendar') }}</a>
+<a href="#" id="show-calendar-btn" class="btn btn-info mb-3">{{ __('info.show_calendar') }}</a>
 
 <!-- Information Table -->
 <div class="row">
@@ -149,9 +149,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 placement: 'auto', // Auto placement of the popover
                 trigger: 'hover', // Trigger on hover
                 content: `
-                    <p><strong>Description:</strong> ${info.event.extendedProps.description || 'No description available'}</p>
+                    <p><strong>Description:</strong> ${info.event.extendedProps.description || '-'}</p>
                     <p><strong>Date:</strong> ${info.event.start.toLocaleDateString()}</p>
-                    <p><strong>Time:</strong> ${info.event.extendedProps.time || ''}</p>
+                    <p><strong>Time:</strong> ${info.event.extendedProps.time || '-'}</p>
                 `,
                 html: true, // Allow HTML content
             });

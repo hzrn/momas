@@ -62,6 +62,11 @@ return [
     'summary' => 'Summary',
     'all_months' => 'All Months',
 
+    'show_calendar' => 'Show Calendar',
+    'event_calendar' => 'Event Calendar',
+    'select_a_category' => 'Select a category',
+
+
 
 
 

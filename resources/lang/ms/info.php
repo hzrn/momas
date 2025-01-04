@@ -62,5 +62,9 @@ return [
     'summary' => 'Ringkasan',
     'all_months' => 'Semua Bulan',
 
+    'show_calendar' => 'Buka Kalendar',
+    'event_calendar' => 'Kalendar Acara',
+    'select_a_category' => 'Pilih Kategori',
+
 
 ];

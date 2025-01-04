@@ -56,7 +56,7 @@
                     <td>{{ $item->title }}</td>
                     <td>{{ $item->category->name }}</td>
                     <td>{{ \Carbon\Carbon::parse($item->date)->format('d-m-Y H:i') }}</td>
-                    <td>{{ $item->content ?? '-' }}</td>
+                    <td>{{ $item->description ?? '-' }}</td>
                 </tr>
             @endforeach
         </tbody>

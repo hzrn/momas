@@ -112,7 +112,7 @@ class InfoController extends Controller
 
         if ($request->hasFile('photo')) {
             $this->deletePhoto($info->photo); // Delete old photo from Cloudinary
-            $validatedData['photo'] = $this->storePhoto($request->file('photo'));
+            $requestData['photo'] = $this->storePhoto($request->file('photo'));
         }
 
         $info->update($requestData + ['updated_by' => auth()->id()]);

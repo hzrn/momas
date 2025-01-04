@@ -21,7 +21,7 @@
 
             <div class="form-group">
                 {!! Form::label('category_info_id',  __('info.category') ) !!}
-                {!! Form::select('category_info_id', $categoryList, null, ['class' => 'form-control mb-3', 'required', 'placeholder' => 'Select a Category']) !!}
+                {!! Form::select('category_info_id', $categoryList, null, ['class' => 'form-control mb-3', 'required', 'placeholder' =>  __('info.select_a_category')]) !!}
                 <span class="text-danger">{!! $errors->first('category_info_id') !!}</span>
             </div>
 
