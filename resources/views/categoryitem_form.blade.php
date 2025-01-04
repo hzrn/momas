@@ -4,7 +4,7 @@
 <div class="card">
     <div class="card-body">
         <div class="container mt-3">
-            <h1 class="h3 mb-3">{{$title}}</h1>
+            <h1 class="h3 mb-3">{{__('categoryitem.form_title')}}</h1>
 
             {!! Form::model($categoryitem, [
                 'route' => isset($categoryitem->id) ? ['categoryitem.update', $categoryitem->id] : 'categoryitem.store',

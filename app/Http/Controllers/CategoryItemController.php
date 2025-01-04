@@ -29,8 +29,7 @@ class CategoryItemController extends Controller
     public function create()
     {
         $categoryitem = new CategoryItem();
-        $title = __('categoryitem.form_title');
-        return view('categoryitem_form', compact('categoryitem', 'title'));
+        return view('categoryitem_form', compact('categoryitem'));
     }
 
     /**
