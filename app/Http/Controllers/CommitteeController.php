@@ -6,7 +6,7 @@ use App\Models\Committee;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
-use Illuminate\Support\Facades\Cache;
+
 
 class CommitteeController extends Controller
 {
@@ -15,11 +15,8 @@ class CommitteeController extends Controller
      */
     public function index()
     {
-        // Check if the committee list is already cached; if not, retrieve and cache it
-        $committee = Cache::tags(['committees'])->remember('committee_list', 60, function () {
-            return Committee::MosqueUser()->orderBy('created_at', 'desc')->get();
-        });
-
+        // Retrieve committees ordered by latest created first
+        $committee = Committee::MosqueUser()->orderBy('created_at', 'desc')->get();
         return view('committee_index', [
             'committee' => $committee,
             'title' => __('committee.title'),
@@ -55,12 +52,7 @@ class CommitteeController extends Controller
             $requestData['photo'] = $imagePath;
         }
 
-        // Create the new committee
         Committee::create($requestData);
-
-        // Clear the cached committee list since we added a new record
-        Cache::tags(['committees'])->flush();
-
         flash(__('committee.saved'))->success();
         return redirect()->route('committee.index');
     }
@@ -106,10 +98,6 @@ class CommitteeController extends Controller
         }
 
         $committee->update($validatedData);
-
-        // Clear the cached committee list since we updated a record
-        Cache::tags(['committees'])->flush();
-
         flash(__('committee.updated'))->success();
         return redirect()->route('committee.index');
     }
@@ -121,9 +109,6 @@ class CommitteeController extends Controller
     {
         $this->deletePhoto($committee->photo);
         $committee->delete();
-
-        // Clear the cached committee list since we deleted a record
-        Cache::tags(['committees'])->flush();
 
         flash(__('committee.deleted'))->success();
         return redirect()->route('committee.index');
