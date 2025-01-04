@@ -6,7 +6,7 @@ use App\Models\Committee;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
-
+use Illuminate\Support\Facades\Cache;
 
 class CommitteeController extends Controller
 {
@@ -15,12 +15,16 @@ class CommitteeController extends Controller
      */
     public function index()
     {
-        // Retrieve committees ordered by latest created first
-        $committee = Committee::MosqueUser()->orderBy('created_at', 'desc')->get();
-        return view('committee_index', [
-            'committee' => $committee,
-            'title' => __('committee.title'),
-        ]);
+        $committee = Cache::remember('committees', 10 * 60, function () {
+            return Committee::MosqueUser ()->orderBy('created_at', 'desc')->get();
+        });
+
+        return Cache::remember('committee_index_view', 10 * 60, function () use ($committee) {
+            return view('committee_index', [
+                'committee' => $committee,
+                'title' => __('committee.title'),
+            ])->render();
+        });
     }
 
     /**
