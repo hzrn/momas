@@ -95,37 +95,28 @@
 
     // Function to update category dropdown based on selected type
     function updateCategoryDropdown() {
-    const selectedType = document.querySelector('input[name="type"]:checked').value;
-    const categoryDropdown = document.getElementById('category');
-    const currentValue = categoryDropdown.value; // Store the current value
+        const selectedType = document.querySelector('input[name="type"]:checked').value;
+        const categoryDropdown = document.getElementById('category');
 
-    // Clear existing options
-    categoryDropdown.innerHTML = '';
+        
 
-    // Set options based on type
-    const options = selectedType === 'expenses' ? expenseOptions : donationOptions;
+        // Set options based on type
+        let options = selectedType === 'expenses' ? expenseOptions : donationOptions;
 
-    // Add a placeholder option
-    const placeholderOption = document.createElement('option');
-    placeholderOption.value = '';
-    placeholderOption.textContent = '{{ __('cashflow.select') }}';
-    categoryDropdown.appendChild(placeholderOption);
+        // Add a placeholder option
+        const placeholderOption = document.createElement('option');
+        placeholderOption.value = '';
+        placeholderOption.textContent = '{{ __('cashflow.select') }}';
+        categoryDropdown.appendChild(placeholderOption);
 
-    // Populate dropdown with relevant options
-    for (const [key, value] of Object.entries(options)) {
-        const option = document.createElement('option');
-        option.value = key;
-        option.textContent = value;
-
-        // Retain the selected value if it matches
-        if (key === currentValue) {
-            option.selected = true;
+        // Populate dropdown with relevant options
+        for (const [key, value] of Object.entries(options)) {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = value;
+            categoryDropdown.appendChild(option);
         }
-
-        categoryDropdown.appendChild(option);
     }
-}
-
 
     // Add event listeners to update the dropdown on radio button change
     document.querySelectorAll('input[name="type"]').forEach((radio) => {
