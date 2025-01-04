@@ -13,28 +13,32 @@ class CashflowController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Cashflow::MosqueUser();
+        $cacheKey = 'cashflow_index_' . md5(json_encode($request->all()));
 
-        if ($request->filled('start_date') && $request->filled('end_date')) {
-            $query->whereBetween('date', [$request->start_date, $request->end_date]);
-        } elseif ($request->filled('start_date')) {
-            // If only start_date is provided, filter from that date onward
-            $query->where('date', '>=', $request->start_date);
-        } elseif ($request->filled('end_date')) {
-            // If only end_date is provided, filter up to that date
-            $query->where('date', '<=', $request->end_date);
-        }
+        $cachedData = \Cache::remember($cacheKey, now()->addMinutes(10), function () use ($request) {
+            $query = Cashflow::MosqueUser();
 
+            if ($request->filled('start_date') && $request->filled('end_date')) {
+                $query->whereBetween('date', [$request->start_date, $request->end_date]);
+            } elseif ($request->filled('start_date')) {
+                $query->where('date', '>=', $request->start_date);
+            } elseif ($request->filled('end_date')) {
+                $query->where('date', '<=', $request->end_date);
+            }
 
-        $cashflows = $query->get();
-        $totalIncome = $cashflows->where('type', 'income')->sum('amount');
-        $totalExpenses = $cashflows->where('type', 'expenses')->sum('amount');
+            $cashflows = $query->get();
+            $totalIncome = $cashflows->where('type', 'income')->sum('amount');
+            $totalExpenses = $cashflows->where('type', 'expenses')->sum('amount');
+            $cashflow = $query->orderBy('created_at', 'desc')->get();
 
-        $cashflow = $query->orderBy('created_at', 'desc')->get();
+            return compact('cashflow', 'totalIncome', 'totalExpenses');
+        });
+
         $title = __('cashflow.title');
 
-        return view('cashflow_index', compact('cashflow', 'totalIncome', 'totalExpenses', 'title'));
+        return view('cashflow_index', array_merge($cachedData, compact('title')));
     }
+
 
     public function create()
     {
@@ -58,7 +62,9 @@ class CashflowController extends Controller
         }
 
         $cashflow = Cashflow::create($requestData);
-        // $this->updateTotalAmount($cashflow->mosque_id);
+
+        // Clear cache related to cashflows
+        \Cache::tags(['cashflow'])->flush();
 
         flash(__('cashflow.saved'))->success();
         return redirect()->route('cashflow.index');
@@ -91,7 +97,9 @@ class CashflowController extends Controller
         }
 
         $cashflow->update($requestData + ['updated_by' => auth()->id()]);
-        // $this->updateTotalAmount($cashflow->mosque_id);
+
+        // Clear cache related to cashflows
+        \Cache::tags(['cashflow'])->flush();
 
         flash(__('cashflow.updated'))->success();
         return redirect()->route('cashflow.index');
@@ -101,6 +109,9 @@ class CashflowController extends Controller
     {
         $this->deletePhoto($cashflow->photo); // Delete photo from Cloudinary
         $cashflow->delete();
+
+        // Clear cache related to cashflows
+        \Cache::tags(['cashflow'])->flush();
 
         flash(__('cashflow.deleted'))->success();
         return redirect()->route('cashflow.index');
@@ -130,93 +141,86 @@ class CashflowController extends Controller
         }
     }
 
-    // private function updateTotalAmount($mosque_id)
-    // {
-    //     $mosque = Mosque::findOrFail($mosque_id);
-    //     $mosque->total_amount = $mosque->cashflows()->where('type', 'income')->sum('amount') -
-    //         $mosque->cashflows()->where('type', 'expenses')->sum('amount');
-    //     $mosque->save();
-    // }
 
-    public function exportPDF()
+
+    public function exportPDF(Request $request)
     {
-        $cashflow = Cashflow::MosqueUser()->get();
-        $mosqueName = optional(auth()->user()->mosque)->name ??  __('cashflow.no_mosque');
+        $cacheKey = 'cashflow_pdf_' . auth()->user()->id . '_' . md5(json_encode($request->all()));
 
-        $pdf = Pdf::loadView('cashflow_pdf', compact('cashflow', 'mosqueName'));
-        return $pdf->download('cashflow_list.pdf');
+        $pdfContent = \Cache::remember($cacheKey, now()->addMinutes(10), function () {
+            $cashflow = Cashflow::MosqueUser()->get();
+            $mosqueName = optional(auth()->user()->mosque)->name ?? __('cashflow.no_mosque');
+
+            $pdf = Pdf::loadView('cashflow_pdf', compact('cashflow', 'mosqueName'));
+            return $pdf->output(); // Return raw PDF content
+        });
+
+        return response($pdfContent)->withHeaders([
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="cashflow_list.pdf"'
+        ]);
     }
+
 
     public function cashflowAnalysis(Request $request)
     {
-        $title = __('cashflow.analysis_title');
-        // Get the selected year and month from the request
-        $selectedYear = $request->input('year', now()->year);
-        $selectedMonth = $request->input('month', null);
+        $cacheKey = 'cashflow_analysis_' . auth()->user()->id . '_' . md5(json_encode($request->all()));
 
-        // Prepare query for monthly cashflow data
-        $query = Cashflow::selectRaw('
-            DATE_FORMAT(date, "%Y-%m") as month,
-            SUM(CASE WHEN type = "income" THEN amount ELSE 0 END) as total_income,
-            SUM(CASE WHEN type = "expenses" THEN amount ELSE 0 END) as total_expenses
-        ')
-        ->where('mosque_id', auth()->user()->mosque_id)
-        ->whereYear('date', $selectedYear)
-        ->groupBy('month')
-        ->orderBy('month');
+        $cachedData = \Cache::remember($cacheKey, now()->addMinutes(10), function () use ($request) {
+            $title = __('cashflow.analysis_title');
+            $selectedYear = $request->input('year', now()->year);
+            $selectedMonth = $request->input('month', null);
 
-        // Apply month filter if provided
-        if ($selectedMonth) {
-            $query->whereMonth('date', $selectedMonth);
-        }
+            $query = Cashflow::selectRaw('
+                DATE_FORMAT(date, "%Y-%m") as month,
+                SUM(CASE WHEN type = "income" THEN amount ELSE 0 END) as total_income,
+                SUM(CASE WHEN type = "expenses" THEN amount ELSE 0 END) as total_expenses
+            ')
+            ->where('mosque_id', auth()->user()->mosque_id)
+            ->whereYear('date', $selectedYear)
+            ->groupBy('month')
+            ->orderBy('month');
 
-        // Execute the query
-        $monthlyData = $query->get();
+            if ($selectedMonth) {
+                $query->whereMonth('date', $selectedMonth);
+            }
 
-        // Prepare monthly cashflow data
-        $monthlyChartData = [];
-        $totalIncome = 0;
-        $totalExpenses = 0;
+            $monthlyData = $query->get();
+            $monthlyChartData = [];
+            $totalIncome = 0;
+            $totalExpenses = 0;
 
-        // Ensure all months are represented
-        for ($i = 1; $i <= 12; $i++) {
-            $monthKey = str_pad($i, 2, '0', STR_PAD_LEFT);
-            $monthName = date('F', mktime(0, 0, 0, $i, 1));
+            for ($i = 1; $i <= 12; $i++) {
+                $monthKey = str_pad($i, 2, '0', STR_PAD_LEFT);
+                $monthName = date('F', mktime(0, 0, 0, $i, 1));
+                $monthData = $monthlyData->firstWhere('month', date('Y-m', strtotime("$selectedYear-$monthKey-01")));
 
-            $monthData = $monthlyData->firstWhere('month', date('Y-m', strtotime("$selectedYear-$monthKey-01")));
+                $income = $monthData ? floatval($monthData->total_income) : 0;
+                $expenses = $monthData ? floatval($monthData->total_expenses) : 0;
 
-            $income = $monthData ? floatval($monthData->total_income) : 0;
-            $expenses = $monthData ? floatval($monthData->total_expenses) : 0;
+                $monthlyChartData[$monthName] = [
+                    'income' => $income,
+                    'expenses' => $expenses
+                ];
 
-            $monthlyChartData[$monthName] = [
-                'income' => $income,
-                'expenses' => $expenses
+                $totalIncome += $income;
+                $totalExpenses += $expenses;
+            }
+
+            return [
+                'chartData' => $monthlyChartData,
+                'totalIncome' => $totalIncome,
+                'totalExpenses' => $totalExpenses,
+                'year' => $selectedYear,
+                'month' => $selectedMonth,
             ];
+        });
 
-            $totalIncome += $income;
-            $totalExpenses += $expenses;
-        }
-
-        // Prepare response data
-        $responseData = [
-            'chartData' => $monthlyChartData,
-            'totalIncome' => $totalIncome,
-            'totalExpenses' => $totalExpenses,
-            'year' => $selectedYear,
-            'month' => $selectedMonth,
-
-        ];
-
-        // Return JSON response for AJAX requests or view for regular requests
         return $request->ajax()
-            ? response()->json($responseData)
-            : view('cashflow_analysis', [
-                'monthlyData' => $responseData,
-                'selectedYear' => $selectedYear,
-                'selectedMonth' => $selectedMonth,
-                'title' => $title
-            ]);
+            ? response()->json($cachedData)
+            : view('cashflow_analysis', array_merge($cachedData, compact('title')));
     }
+
 
     public function getLineChart(Request $request)
     {
