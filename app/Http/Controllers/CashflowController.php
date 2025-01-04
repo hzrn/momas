@@ -45,7 +45,7 @@ class CashflowController extends Controller
     {
         $requestData = $request->validate([
             'date' => 'required|date',
-            'category' => 'nullable|string',
+            'category' => 'required|string',
             'description' => 'nullable|string',
             'type' => 'required|in:income,expenses',
             'amount' => 'required|numeric|min:0.01',
@@ -78,7 +78,7 @@ class CashflowController extends Controller
     {
         $requestData = $request->validate([
             'date' => 'required|date',
-            'category' => 'nullable|string',
+            'category' => 'required|string',
             'description' => 'nullable|string',
             'type' => 'required|in:income,expenses',
             'amount' => 'required|numeric|min:0.01',
