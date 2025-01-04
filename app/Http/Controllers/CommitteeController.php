@@ -13,18 +13,18 @@ class CommitteeController extends Controller
     /**
      * Display a listing of the resource.
      */
+
     public function index()
     {
+        // Cache the committee list for 10 minutes
         $committee = Cache::remember('committees', 10 * 60, function () {
             return Committee::MosqueUser ()->orderBy('created_at', 'desc')->get();
         });
 
-        return Cache::remember('committee_index_view', 10 * 60, function () use ($committee) {
-            return view('committee_index', [
-                'committee' => $committee,
-                'title' => __('committee.title'),
-            ])->render();
-        });
+        return view('committee_index', [
+            'committee' => $committee,
+            'title' => __('committee.title'),
+        ]);
     }
 
     /**
