@@ -23,7 +23,7 @@
                     </tr>
                     <tr>
                         <td><strong>{{ __('info.description') }}:</strong></td>
-                        <td>{{ $info->content ?? '-' }}</td>
+                        <td>{{ $info->description ?? '-' }}</td>
                     </tr>
                     <tr>
                         <td><strong>{{ __('info.photo') }}:</strong></td>
