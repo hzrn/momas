@@ -15,8 +15,8 @@
 
             <div class="form-group">
                 {!! Form::label('date', __('cashflow.date')) !!}
-                {!! Form::date('date', $cashflow->date ?? now(), ['class' => 'form-control mb-3', 'required']) !!}
-                <span class="text-danger">{!! $errors->first('date') !!}</span>
+                {!! Form::date('date', $cashflow->date ?? now(), ['class' => 'form-control', 'required']) !!}
+                <span class="text-danger mb-3">{!! $errors->first('date') !!}</span>
             </div>
 
             <div class="form-group mb-3">
@@ -95,29 +95,37 @@
 
     // Function to update category dropdown based on selected type
     function updateCategoryDropdown() {
-        const selectedType = document.querySelector('input[name="type"]:checked').value;
-        const categoryDropdown = document.getElementById('category');
+    const selectedType = document.querySelector('input[name="type"]:checked').value;
+    const categoryDropdown = document.getElementById('category');
+    const currentValue = categoryDropdown.value; // Store the current value
 
-        // Clear existing options
-        categoryDropdown.innerHTML = '';
+    // Clear existing options
+    categoryDropdown.innerHTML = '';
 
-        // Set options based on type
-        let options = selectedType === 'expenses' ? expenseOptions : donationOptions;
+    // Set options based on type
+    const options = selectedType === 'expenses' ? expenseOptions : donationOptions;
 
-        // Add a placeholder option
-        const placeholderOption = document.createElement('option');
-        placeholderOption.value = '';
-        placeholderOption.textContent = '{{ __('cashflow.select') }}';
-        categoryDropdown.appendChild(placeholderOption);
+    // Add a placeholder option
+    const placeholderOption = document.createElement('option');
+    placeholderOption.value = '';
+    placeholderOption.textContent = '{{ __('cashflow.select') }}';
+    categoryDropdown.appendChild(placeholderOption);
 
-        // Populate dropdown with relevant options
-        for (const [key, value] of Object.entries(options)) {
-            const option = document.createElement('option');
-            option.value = key;
-            option.textContent = value;
-            categoryDropdown.appendChild(option);
+    // Populate dropdown with relevant options
+    for (const [key, value] of Object.entries(options)) {
+        const option = document.createElement('option');
+        option.value = key;
+        option.textContent = value;
+
+        // Retain the selected value if it matches
+        if (key === currentValue) {
+            option.selected = true;
         }
+
+        categoryDropdown.appendChild(option);
     }
+}
+
 
     // Add event listeners to update the dropdown on radio button change
     document.querySelectorAll('input[name="type"]').forEach((radio) => {
