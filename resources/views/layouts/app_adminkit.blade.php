@@ -8,7 +8,7 @@
     <meta name="description" content="Responsive Admin & Dashboard Template based on Bootstrap 5">
     <meta name="author" content="AdminKit">
     <meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
     <link rel="canonical" href="https://demo-basic.adminkit.io/pages-blank.html" />
@@ -223,10 +223,7 @@
             <main class="content">
                 <div class="container-fluid p-0">
                     @if (session('flash'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            {{ session('flash') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
+                        {{ session('flash') }}
                     @endif
                     @yield('content')
                 </div>
