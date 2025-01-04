@@ -256,12 +256,6 @@
     <!-- Feather Icons -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"></script>
 
-    <script>
-        // Auto-hide flash messages after 3 seconds
-        $(document).ready(function() {
-            $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
-        });
-    </script>
 
     <script>
         // Initialize Feather icons
@@ -285,7 +279,7 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}' // Include CSRF token for security
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 }
             })
             .then(response => response.json())
