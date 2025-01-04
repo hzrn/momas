@@ -247,6 +247,14 @@
                 color: white;
             }
         </style>
+
+        <style>
+            /* Add a fade-out effect */
+            .fade-out {
+                opacity: 0;
+                transition: opacity 1s ease-out;  /* Adjust duration and easing */
+            }
+        </style>
     </div>
 
     <!-- DataTables JS -->
@@ -257,18 +265,23 @@
     <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"></script>
 
     <script>
-        // Clear flash message after a set timeout or after page reload
+        // Clear flash message after a set timeout with fade out effect
         window.addEventListener('load', function() {
             setTimeout(function() {
-                // Clear the flash message if it exists
+                // Get the flash message element
                 const flashMessage = document.querySelector('.alert');
                 if (flashMessage) {
-                    flashMessage.style.display = 'none';
+                    // Add a fade-out class to the flash message
+                    flashMessage.classList.add('fade-out');
+
+                    // Wait for the fade-out transition to complete, then hide the message
+                    setTimeout(function() {
+                        flashMessage.style.display = 'none';  // Hide the flash message after the fade-out
+                    }, 1000);  // Adjust the delay to match the fade-out duration
                 }
-            }, 3000);  // Adjust the time (in ms) as needed
+            }, 3000);  // Time before starting fade-out (in ms)
         });
     </script>
-
 
     <script>
         // Initialize Feather icons
