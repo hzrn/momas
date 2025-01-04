@@ -1,7 +1,7 @@
 @extends('layouts.app_adminkit')
 
 @section('content')
-<h1 class="h3 mb-3">{{$title }}</h1>
+<h1 class="h3 mb-3">{{$title}}</h1>
 <a href="{{ route('committee.create') }}" class="btn btn-primary mb-3">{{ __('committee.add') }}</a>
 <a href="{{ route('committee.exportPDF', request()->all()) }}" class="btn btn-secondary mb-3">{{ __('committee.export_pdf') }}</a>
 

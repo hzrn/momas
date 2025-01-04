@@ -256,6 +256,18 @@
     <!-- Feather Icons -->
     <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"></script>
 
+    <script>
+        // Clear flash message after a set timeout or after page reload
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                // Clear the flash message if it exists
+                const flashMessage = document.querySelector('.alert');
+                if (flashMessage) {
+                    flashMessage.style.display = 'none';
+                }
+            }, 3000);  // Adjust the time (in ms) as needed
+        });
+    </script>
 
 
     <script>
