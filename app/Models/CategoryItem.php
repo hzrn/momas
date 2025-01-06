@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CategoryItem extends Model
 {
-    use HasFactory, HasMosque, HasCreatedBy, GenerateUrl;
+    use HasFactory, HasMosque, HasCreatedBy;
     protected $guarded = [];
 
     public function items()
