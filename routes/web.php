@@ -68,7 +68,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/line-chart', [CashflowController::class, 'getLineChart'])->name('linechart');
             Route::get('/daily', [CashflowController::class, 'getDailyCashflow'])->name('getDailyCashflow');
             Route::get('/piechart', [CashflowController::class, 'getPieChart'])->name('piechart');
-            Route::get('/export', [CashflowController::class, 'exportExcel'])->name('cashflow.export');
+            Route::get('/export-excel', [CashflowController::class, 'exportExcel'])->name('exportExcel');
         });
         Route::resource('cashflow', CashflowController::class);
 
