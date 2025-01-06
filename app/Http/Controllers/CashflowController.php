@@ -8,6 +8,8 @@ use App\Models\Mosque;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use App\Exports\CashflowExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CashflowController extends Controller
 {
@@ -440,6 +442,11 @@ class CashflowController extends Controller
         }
 
         return $categoryCollection;
+    }
+
+    public function exportExcel()
+    {
+        return Excel::download(new CashflowExport, 'cashflow.xlsx');
     }
 
 }
