@@ -15,15 +15,17 @@ class CategoryItem extends Model
 
     public function items()
     {
-        return $this->hasMany(Info::class, 'category_item_id');
+        return $this->hasMany(Item::class, 'category_item_id');
     }
 
     protected static function boot()
-    {
-        parent::boot();
+{
+    parent::boot();
 
-        static::deleting(function ($categoryItem) {
-            $categoryItem->items()->delete();
-        });
-    }
+    static::deleting(function ($categoryItem) {
+        $categoryItem->items()->delete();
+    });
+}
+
+
 }
