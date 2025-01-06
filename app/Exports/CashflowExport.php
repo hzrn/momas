@@ -13,10 +13,18 @@ class CashflowExport implements FromCollection, WithHeadings
      */
     public function collection()
     {
-        return Cashflow::MosqueUser()
+        $cashflows = Cashflow::MosqueUser()
             ->select('date', 'category', 'description', 'type', 'amount')
             ->orderBy('date', 'desc')
             ->get();
+
+        // Format the amount using the formatRM helper function
+        $cashflows->transform(function ($item) {
+            $item->amount = formatRM($item->amount); // Apply formatRM to the amount
+            return $item;
+        });
+
+        return $cashflows;
     }
 
     /**
@@ -25,11 +33,11 @@ class CashflowExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
-            'Date',
-            'Category',
-            'Description',
-            'Type',
-            'Amount',
+            __('cashflow.date'), // Translated string for "Date"
+            __('cashflow.category'), // Translated string for "Category"
+            __('cashflow.description'), // Translated string for "Description"
+            __('cashflow.type'), // Translated string for "Type"
+            __('cashflow.amount'), // Translated string for "Amount (RM)"
         ];
     }
 }

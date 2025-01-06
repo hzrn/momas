@@ -11,6 +11,7 @@ return [
     //buttons
     'add' => 'Tambah Kewangan',
     'export_pdf' => 'Eksport ke PDF',
+    'export_excel' => 'Eksport ke Excel',
     'details' => 'Butiran',
     'edit' => 'Kemaskini',
     'delete' => 'Padam',

@@ -4,9 +4,7 @@
     <h1 class="h3 mb-3">{{$title}}</h1>
     <a href="{{ route('cashflow.create') }}" class="btn btn-primary mb-3">{{__('cashflow.add')}}</a>
     <a href="{{ route('cashflow.exportPDF', request()->all()) }}" class="btn btn-secondary mb-3">{{__('cashflow.export_pdf')}}</a>
-    <a href="{{ route('cashflow.exportExcel') }}" class="btn btn-success">
-        <i class="fas fa-file-excel"></i> Export to Excel
-    </a>
+    <a href="{{ route('cashflow.exportExcel') }}" class="btn btn-success mb-3">{{__('cashflow.export_excel')}}</a>
 
     <form action="{{ route('cashflow.index') }}" method="GET" class="mb-3">
         <div class="row">

@@ -11,6 +11,7 @@ return [
     //buttons
     'add' => 'Add Cashflow',
     'export_pdf' => 'Export to PDF',
+    'export_excel' => 'Export to Excel',
     'details' => 'Details',
     'edit' => 'Edit',
     'delete' => 'Delete',
