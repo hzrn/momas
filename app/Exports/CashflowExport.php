@@ -18,9 +18,16 @@ class CashflowExport implements FromCollection, WithHeadings
             ->orderBy('date', 'desc')
             ->get();
 
-        // Format the amount using the formatRM helper function
+        // Format the amount and translate the type and category
         $cashflows->transform(function ($item) {
             $item->amount = formatRM($item->amount); // Apply formatRM to the amount
+
+            // Translate the type and capitalize the first letter
+            $item->type = ucfirst(__('cashflow.' . strtolower($item->type)));
+
+            // Translate the category and capitalize the first letter
+            $item->category = ucfirst(__('cashflow.' . strtolower($item->category)));
+
             return $item;
         });
 
