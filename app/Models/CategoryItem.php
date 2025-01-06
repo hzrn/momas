@@ -17,4 +17,13 @@ class CategoryItem extends Model
     {
         return $this->hasMany(Info::class, 'category_item_id');
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($categoryItem) {
+            $categoryItem->items()->delete();
+        });
+    }
 }
