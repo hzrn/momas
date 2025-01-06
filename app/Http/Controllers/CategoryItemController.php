@@ -36,7 +36,7 @@ class CategoryItemController extends Controller
             'name' => 'required',
         ]);
 
-        $categoryitem = CategoryItem::create($requestData);
+        CategoryItem::create($requestData);
         flash(__('categoryitem.saved'))->success();
         return redirect()->route('categoryitem.index');
     }
