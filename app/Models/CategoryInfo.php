@@ -20,4 +20,14 @@ class CategoryInfo extends Model
     {
         return $this->hasMany(Info::class, 'category_info_id');
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($categoryInfo) {
+            $categoryInfo->infos()->delete();
+        });
+    }
+
 }
