@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 class CategoryInfo extends Model
 {
     use HasFactory;
-    use HasMosque, HasCreatedBy, GenerateUrl;
+    use HasMosque, HasCreatedBy;
 
     protected $guarded = [];
 

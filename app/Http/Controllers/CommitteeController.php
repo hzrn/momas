@@ -6,7 +6,7 @@ use App\Models\Committee;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
-
+use Illuminate\Support\Facades\Cache;
 
 class CommitteeController extends Controller
 {
@@ -15,14 +15,29 @@ class CommitteeController extends Controller
      */
     public function index()
     {
-        // Retrieve committees ordered by latest created first
-        $committee = Committee::MosqueUser()->orderBy('created_at', 'desc')->get();
+        $mosqueId = auth()->user()->mosque_id; // Custom cache key
+        $cacheKey = 'committees_' . $mosqueId;
+
+        try {
+            $committee = Cache::remember($cacheKey, 3600, function () {
+                return Committee::MosqueUser()
+                    ->select('id', 'name', 'phone_num', 'position', 'address', 'photo')
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            });
+        } catch (\Exception $e) {
+            // Fallback to database query if cache fails
+            $committee = Committee::MosqueUser()
+                ->select('id', 'name', 'phone_num', 'position', 'address', 'photo')
+                ->orderBy('created_at', 'desc')
+                ->get();
+        }
+
         return view('committee_index', [
             'committee' => $committee,
             'title' => __('committee.title'),
         ]);
     }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -53,6 +68,7 @@ class CommitteeController extends Controller
         }
 
         Committee::create($requestData);
+        Cache::forget('committees');
         flash(__('committee.saved'))->success();
         return redirect()->route('committee.index');
     }
@@ -98,6 +114,7 @@ class CommitteeController extends Controller
         }
 
         $committee->update($validatedData);
+        Cache::forget('committees');
         flash(__('committee.updated'))->success();
         return redirect()->route('committee.index');
     }
@@ -109,6 +126,7 @@ class CommitteeController extends Controller
     {
         $this->deletePhoto($committee->photo);
         $committee->delete();
+        Cache::forget('committees');
 
         flash(__('committee.deleted'))->success();
         return redirect()->route('committee.index');
