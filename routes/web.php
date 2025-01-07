@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +18,8 @@ use App\Http\Controllers\{
 
 // Import Middleware
 use App\Http\Middleware\EnsureMosqueDataCompleted;
+use Spatie\ResponseCache\Middlewares\CacheResponse;
+use Spatie\ResponseCache\Middlewares\DoNotCacheResponse;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,13 +75,11 @@ Route::middleware(['auth'])->group(function () {
 
         // Info
         Route::prefix('info')->name('info.')->group(function () {
-            // Route::get('/reminders', [InfoController::class, 'showReminders'])->name('reminders.index');
-            Route::get('/calendar', [InfoController::class, 'calendarEvents'])->name('calendar'); // Fixed route name
+            Route::get('/calendar', [InfoController::class, 'calendarEvents'])->name('calendar');
             Route::get('/export-pdf', [InfoController::class, 'exportPDF'])->name('exportPDF');
             Route::get('/analysis', [InfoController::class, 'infoAnalysis'])->name('analysis');
             Route::get('/piechart', [InfoController::class, 'fetchPieChartData'])->name('piechart');
             Route::get('/linechart', [InfoController::class, 'lineChart'])->name('linechart');
-
         });
         Route::post('/reminders/remove-all', [InfoController::class, 'removeAll'])->name('reminders.removeAll');
         Route::resource('info', InfoController::class);
@@ -113,6 +112,20 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('committee')->name('committee.')->group(function () {
             Route::get('/export-pdf', [CommitteeController::class, 'exportPDF'])->name('exportPDF');
         });
-        Route::resource('committee', CommitteeController::class);
+
+        // Apply CacheResponse middleware to cache the index and show routes
+        Route::middleware(CacheResponse::class)->group(function () {
+            Route::get('/committee', [CommitteeController::class, 'index'])->name('committee.index');
+            Route::get('/committee/{committee}', [CommitteeController::class, 'show'])->name('committee.show');
+        });
+
+        // Apply DoNotCacheResponse middleware to prevent caching for other committee routes
+        Route::middleware(DoNotCacheResponse::class)->group(function () {
+            Route::get('/committee/create', [CommitteeController::class, 'create'])->name('committee.create');
+            Route::post('/committee', [CommitteeController::class, 'store'])->name('committee.store');
+            Route::get('/committee/{committee}/edit', [CommitteeController::class, 'edit'])->name('committee.edit');
+            Route::put('/committee/{committee}', [CommitteeController::class, 'update'])->name('committee.update');
+            Route::delete('/committee/{committee}', [CommitteeController::class, 'destroy'])->name('committee.destroy');
+        });
     });
 });
