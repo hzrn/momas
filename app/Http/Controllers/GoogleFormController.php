@@ -33,10 +33,10 @@ class GoogleFormController extends Controller
 
         // Map Google Form fields to your database fields
         $infoData = [
-            'title' => $formData['title'] ?? null,
-            'category_info_id' => $this->mapCategoryFromResponse($formData['category'] ?? ''),
-            'date' => $this->formatDate($formData['date'] ?? ''),
-            'description' => $formData['description'] ?? null,
+            'title' => $formData['entry.1965117725'] ?? null, // Updated question ID
+            'category_info_id' => $this->mapCategoryFromResponse($formData['entry.1979175233'] ?? ''), // Updated question ID
+            'date' => $this->formatDate($formData['entry.695259417'] ?? ''), // Updated question ID
+            'description' => $formData['entry.919011683'] ?? null, // Updated question ID
             'mosque_id' => $this->getMosqueIdFromResponse($formData),
             'created_by' => auth()->id() ?? 1, // Default system user ID
         ];
@@ -80,7 +80,7 @@ class GoogleFormController extends Controller
     protected function getMosqueIdFromResponse($formData)
     {
         // Logic to determine mosque_id from form response
-        return $formData['mosque_id'] ?? null;
+        return $formData['entry.1070685759'] ?? null; // Updated question ID
     }
 
     // Method to fetch responses periodically if webhook isn't possible
@@ -109,16 +109,16 @@ class GoogleFormController extends Controller
         $answers = $response->getAnswers();
 
         $infoData = [
-            'title' => $this->getAnswerByQuestionId($answers, 'titleQuestionId'),
+            'title' => $this->getAnswerByQuestionId($answers, 'entry.1965117725') ?? 'No Title', // Updated question ID
             'category_info_id' => $this->mapCategoryFromResponse(
-                $this->getAnswerByQuestionId($answers, 'categoryQuestionId')
+                $this->getAnswerByQuestionId($answers, 'entry.1979175233') ?? 'No Category' // Updated question ID
             ),
             'date' => $this->formatDate(
-                $this->getAnswerByQuestionId($answers, 'dateQuestionId')
+                $this->getAnswerByQuestionId($answers, 'entry.695259417') ?? now()->toDateTimeString() // Updated question ID
             ),
-            'description' => $this->getAnswerByQuestionId($answers, 'descriptionQuestionId'),
-            'mosque_id' => $this->getMosqueIdFromResponse($answers),
-            'created_by' => auth()->id() ?? 1,
+            'description' => $this->getAnswerByQuestionId($answers, 'entry.919011683') ?? 'No Description', // Updated question ID
+            'mosque_id' => $this->getMosqueIdFromResponse($answers) ?? 1, // Default mosque ID
+            'created_by' => auth()->id() ?? 1, // Default system user ID
         ];
 
         Info::create($infoData);
@@ -126,6 +126,18 @@ class GoogleFormController extends Controller
 
     protected function getAnswerByQuestionId($answers, $questionId)
     {
-        return $answers[$questionId]->getTextAnswers()->getAnswers()[0]->getValue() ?? null;
+        if (!isset($answers[$questionId])) {
+            \Log::warning('Question ID not found in answers:', ['questionId' => $questionId]);
+            return null;
+        }
+
+        $answer = $answers[$questionId];
+
+        if (!isset($answer->textAnswers) || !isset($answer->textAnswers->answers)) {
+            \Log::warning('Invalid answer structure for question ID:', ['questionId' => $questionId]);
+            return null;
+        }
+
+        return $answer->textAnswers->answers[0]->value ?? null;
     }
 }
