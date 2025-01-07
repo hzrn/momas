@@ -14,7 +14,6 @@
                             <tr>
                                 <th>{{__('categoryitem.no')}}</th>
                                 <th>{{__('categoryitem.category_name')}}</th>
-                                <th>{{__('categoryitem.created_by')}}</th>
                                 <th>{{__('categoryitem.action')}}</th>
                             </tr>
                         </thead>
@@ -23,7 +22,6 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{$item->name}}</td>
-                                    <td>{{optional($item->createdBy)->name}}</td>
                                     <td>
                                         <a href="{{ route('categoryitem.edit', $item->id) }}" class="btn btn-warning mb-1">{{__('categoryitem.edit')}}</a>
                                         <form action="{{ route('categoryitem.destroy', $item->id) }}" method="POST" style="display:inline-block;">
