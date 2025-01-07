@@ -15,19 +15,10 @@ class CategoryInfoController extends Controller
      */
     public function index()
     {
-        $categoryinfo = CategoryInfo::with('createdBy')->MosqueUser()->orderBy('created_at', 'desc');
-
-        // Preprocess data for the Blade template
-        $categoryinfo->map(function ($item) {
-            $item->created_by_name = optional($item->createdBy)->name;
-            return $item;
-        });
-
+        $categoryinfo = CategoryInfo::with('infos')->MosqueUser()->orderBy('created_at', 'desc')->get();
         $title = __('categoryinfo.title');
         return view('categoryinfo_index', compact('categoryinfo', 'title'));
     }
-
-
 
 
     /**
