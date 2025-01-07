@@ -9,10 +9,6 @@
     <meta name="author" content="AdminKit">
     <meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
-    <link rel="canonical" href="https://demo-basic.adminkit.io/pages-blank.html" />
-
     <title>{{ $title ?? '' }} :: Momas</title>
 
     <link rel="shortcut icon" href="{{ asset('images/mosque-icon.png') }}" type="image/png" />
@@ -33,7 +29,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
     <!-- Custom CSS -->
-    <link href="{{ asset('adminkit/css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/@adminkit/core@latest/dist/css/app.css">
+
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
