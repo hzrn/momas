@@ -58,9 +58,9 @@ class CommitteeController extends Controller
             $requestData['photo'] = $imagePath;
         }
 
-        Committee::create($requestData);
-        Cache::forget('committee_list'); // Clear the cache after creating a new committee
-        Log::info('New committee created and cache cleared.');
+        $committee = Committee::create($requestData);
+        Cache::forget('committee_list'); // Clear the list cache after creating a new committee
+        Log::info('New committee created and list cache cleared.');
         flash(__('committee.saved'))->success();
         return redirect()->route('committee.index');
     }
@@ -113,9 +113,8 @@ class CommitteeController extends Controller
         }
 
         $committee->update($validatedData);
-        Cache::forget('committee_list'); // Clear the cache after updating
-        Cache::forget("committee_{$committee->id}"); // Clear the specific cache for the updated committee
-        Log::info("Committee ID {$committee->id} updated and cache cleared.");
+        Cache::forget("committee_{$committee->id}"); // Clear the cache for the updated committee
+        Log::info("Committee ID {$committee->id} updated and its cache cleared.");
         flash(__('committee.updated'))->success();
         return redirect()->route('committee.index');
     }
@@ -127,9 +126,9 @@ class CommitteeController extends Controller
     {
         $this->deletePhoto($committee->photo);
         $committee->delete();
-        Cache::forget('committee_list'); // Clear the cache after deletion
-        Cache::forget("committee_{$committee->id}"); // Clear the specific cache for the deleted committee
-        Log::info("Committee ID {$committee->id} deleted and cache cleared.");
+        Cache::forget('committee_list'); // Clear the list cache after deletion
+        Cache::forget("committee_{$committee->id}"); // Clear the cache for the deleted committee
+        Log::info("Committee ID {$committee->id} deleted and caches cleared.");
         flash(__('committee.deleted'))->success();
         return redirect()->route('committee.index');
     }
