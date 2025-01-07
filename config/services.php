@@ -21,6 +21,11 @@ return [
         'scheme' => 'https',
     ],
 
+    'google' => [
+        'form_id' => env('GOOGLE_FORM_ID'),
+        'webhook_secret' => env('GOOGLE_WEBHOOK_SECRET'),
+    ],
+
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],
