@@ -108,14 +108,8 @@ class CommitteeController extends Controller
         ]);
 
         if ($request->hasFile('photo')) {
-            // Delete the old photo if it exists
-            $this->deletePhoto($committee->photo);
-
-            // Upload the new photo
+            $this->deletePhoto($committee->photo); // Delete old photo from Cloudinary
             $validatedData['photo'] = $this->storePhoto($request->file('photo'));
-        } else {
-            // Retain the existing photo if no new photo is uploaded
-            $validatedData['photo'] = $committee->photo;
         }
 
         $committee->update($validatedData);
@@ -158,15 +152,10 @@ class CommitteeController extends Controller
     protected function storePhoto($image)
     {
         $result = Cloudinary::upload($image->getRealPath(), [
-            'folder' => 'committees', // Optional: Specify a folder
-            'use_filename' => true,   // Use the original filename
-            'unique_filename' => false, // Do not append a unique identifier
-            'overwrite' => true,      // Overwrite files with the same name
-            'resource_type' => 'auto', // Automatically detect the resource type
-            'upload_preset' => 'original_filename', // Use your upload preset name here
+            'folder' => 'committees',
         ]);
 
-        return $result->getSecurePath(); // Return the secure URL
+        return $result->getSecurePath(); // Secure URL from Cloudinary
     }
 
     /**
@@ -176,15 +165,8 @@ class CommitteeController extends Controller
     {
         if ($photo) {
             // Extract the public ID from the URL
-            $path = parse_url($photo, PHP_URL_PATH); // Get the path part of the URL
-            $publicId = pathinfo($path, PATHINFO_FILENAME); // Extract the filename without extension
-
-            // Ensure the public ID is in the correct format (e.g., "folder/filename")
-            $folder = 'committees'; // Replace with your folder name
-            $publicId = $folder . '/' . $publicId;
-
-            // Delete the file from Cloudinary
-            Cloudinary::destroy($publicId);
+            $publicId = basename(parse_url($photo, PHP_URL_PATH), '.' . pathinfo($photo, PATHINFO_EXTENSION));
+            Cloudinary::destroy('committees/' . $publicId);
         }
     }
 }
