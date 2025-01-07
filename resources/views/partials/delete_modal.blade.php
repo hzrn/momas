@@ -11,11 +11,11 @@
                 {{ __('delete_m.are_you_sure') }}
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __(''delete_m.cancel'') }}</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('delete_m.cancel') }}</button>
                 <form id="deleteForm" method="POST" action="">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger">{{ __(''delete_m.delete'') }}</button>
+                    <button type="submit" class="btn btn-danger">{{ __('delete_m.delete') }}</button>
                 </form>
             </div>
         </div>
