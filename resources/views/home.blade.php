@@ -1,4 +1,5 @@
 
+
 @extends('layouts.app_adminkit')
 @section('content')
 
@@ -7,6 +8,9 @@
 @include('partials.latest_committee_modal')
 @include('partials.latest_info_modal')
 @include('partials.latest_item_modal')
+@php
+    $authUser = auth()->user();
+@endphp
 
 <div class="container-fluid p-0">
 
