@@ -54,7 +54,13 @@
                     <button type="button" class="btn btn-secondary" id="choose-file-button">
                         {{ __('committee.choose_file') }}
                     </button>
-                    <span id="file-name">{{ __('committee.no_file') }}</span>
+                    <span id="file-name">
+                        @if(isset($committee->photo))
+                            {{ basename($committee->photo) }} <!-- Display the existing photo's name -->
+                        @else
+                            {{ __('committee.no_file') }}
+                        @endif
+                    </span>
                     <span id="error-message" class="text-danger d-none"></span>
                 </div>
             </div>
@@ -69,17 +75,21 @@
 </div>
 
 <script>
-    document.getElementById('choose-file-button').addEventListener('click', function() {
-        document.getElementById('photo').click();
+document.addEventListener('DOMContentLoaded', function () {
+    const fileInput = document.getElementById('photo');
+    const fileNameElement = document.getElementById('file-name');
+    const errorMessageElement = document.getElementById('error-message');
+    const submitButton = document.getElementById('submit-button');
+
+    // Handle file selection
+    document.getElementById('choose-file-button').addEventListener('click', function () {
+        fileInput.click();
     });
 
-    document.getElementById('photo').addEventListener('change', function(event) {
+    fileInput.addEventListener('change', function (event) {
         const file = event.target.files[0];
         const fileName = file ? file.name : '{{ __('committee.no_file') }}';
-        const errorMessageElement = document.getElementById('error-message');
-        const submitButton = document.getElementById('submit-button');
-
-        document.getElementById('file-name').textContent = fileName;
+        fileNameElement.textContent = fileName;
 
         const maxSize = 1.9 * 1024 * 1024; // 1.9MB in bytes
         const validExtensions = ['jpg', 'jpeg', 'png'];
@@ -87,17 +97,17 @@
         // Validate file type
         const fileExtension = fileName.split('.').pop().toLowerCase();
         if (file && !validExtensions.includes(fileExtension)) {
-            errorMessageElement.textContent = '{{ __('committee.error_file_type') }}'; // Custom error message for invalid type
+            errorMessageElement.textContent = '{{ __('committee.error_file_type') }}';
             errorMessageElement.classList.remove('d-none');
-            submitButton.disabled = true; // Disable the submit button
+            submitButton.disabled = true;
             return;
         }
 
         // Validate file size
         if (file && file.size > maxSize) {
-            errorMessageElement.textContent = '{{ __('committee.error_file_size') }}'; // Custom error message for file size
+            errorMessageElement.textContent = '{{ __('committee.error_file_size') }}';
             errorMessageElement.classList.remove('d-none');
-            submitButton.disabled = true; // Disable the submit button
+            submitButton.disabled = true;
             return;
         }
 
@@ -107,8 +117,7 @@
     });
 
     // Handle form submission
-    document.getElementById('committee-form').addEventListener('submit', function(event) {
-        const fileInput = document.getElementById('photo');
+    document.getElementById('committee-form').addEventListener('submit', function (event) {
         const file = fileInput.files[0];
         const maxSize = 1.9 * 1024 * 1024; // 1.9MB in bytes
         const validExtensions = ['jpg', 'jpeg', 'png'];
@@ -127,6 +136,7 @@
             alert('{{ __('committee.error_file_size') }}');
         }
     });
+});
 </script>
 
 <style>

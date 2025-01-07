@@ -108,8 +108,14 @@ class CommitteeController extends Controller
         ]);
 
         if ($request->hasFile('photo')) {
-            $this->deletePhoto($committee->photo); // Delete old photo from Cloudinary
+            // Delete the old photo if it exists
+            $this->deletePhoto($committee->photo);
+
+            // Upload the new photo
             $validatedData['photo'] = $this->storePhoto($request->file('photo'));
+        } else {
+            // Retain the existing photo if no new photo is uploaded
+            $validatedData['photo'] = $committee->photo;
         }
 
         $committee->update($validatedData);
