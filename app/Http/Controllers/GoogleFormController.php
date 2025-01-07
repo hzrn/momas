@@ -14,7 +14,8 @@ class GoogleFormController extends Controller
     public function __construct()
     {
         $this->client = new Google_Client();
-        $this->client->setAuthConfig(storage_path('app/google-credentials.json'));
+        $credentials = json_decode(env('GOOGLE_CREDENTIALS'), true);
+        $this->client->setAuthConfig($credentials);
         $this->client->addScope([
             'https://www.googleapis.com/auth/forms.responses.readonly',
             'https://www.googleapis.com/auth/spreadsheets.readonly'
