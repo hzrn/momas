@@ -15,11 +15,11 @@ class CategoryInfoController extends Controller
      */
     public function index()
     {
-        $categoryinfo = CategoryInfo::MosqueUser()->orderBy('created_at', 'desc')->get();;
+        $categoryinfo = CategoryInfo::with('infos')->MosqueUser()->orderBy('created_at', 'desc')->get();
         $title = __('categoryinfo.title');
         return view('categoryinfo_index', compact('categoryinfo', 'title'));
-
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -46,15 +46,6 @@ class CategoryInfoController extends Controller
         return redirect()->route('categoryinfo.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    // public function show($id)
-    // {
-    //     $categoryinfo = CategoryInfo::findOrFail($id);
-    //     $title = 'Category Info';
-    //     return view('categoryinfo_form', compact('categoryinfo'));
-    // }
 
     /**
      * Show the form for editing the specified resource.
