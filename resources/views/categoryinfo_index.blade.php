@@ -23,7 +23,7 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{$item->name}}</td>
-                                    <td>{{$item->createdBy)->name}}</td>
+                                    <td>{{$item->createdBy->name}}</td>
                                     <td>
                                         <a href="{{ route('categoryinfo.edit', $item->id) }}" class="btn btn-warning mb-1">{{__('categoryinfo.edit')}}</a>
                                         <form action="{{ route('categoryinfo.destroy', $item->id) }}" method="POST" style="display:inline-block;">
