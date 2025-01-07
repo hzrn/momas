@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
-use Spatie\ResponseCache\Facades\ResponseCache;
 
 class CommitteeController extends Controller
 {
@@ -60,7 +59,7 @@ class CommitteeController extends Controller
         }
 
         Committee::create($requestData);
-        ResponseCache::clear(); // Clear the entire response cache
+        Cache::forget('committee_list'); // Clear the cache after creating a new committee
         Log::info('New committee created and cache cleared.');
         flash(__('committee.saved'))->success();
         return redirect()->route('committee.index');
@@ -114,7 +113,8 @@ class CommitteeController extends Controller
         }
 
         $committee->update($validatedData);
-        ResponseCache::clear(); // Clear the entire response cache
+        Cache::forget('committee_list'); // Clear the cache after updating
+        Cache::forget("committee_{$committee->id}"); // Clear the specific cache for the updated committee
         Log::info("Committee ID {$committee->id} updated and cache cleared.");
         flash(__('committee.updated'))->success();
         return redirect()->route('committee.index');
@@ -127,7 +127,8 @@ class CommitteeController extends Controller
     {
         $this->deletePhoto($committee->photo);
         $committee->delete();
-        ResponseCache::clear(); // Clear the entire response cache
+        Cache::forget('committee_list'); // Clear the cache after deletion
+        Cache::forget("committee_{$committee->id}"); // Clear the specific cache for the deleted committee
         Log::info("Committee ID {$committee->id} deleted and cache cleared.");
         flash(__('committee.deleted'))->success();
         return redirect()->route('committee.index');
