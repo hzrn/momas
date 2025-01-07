@@ -20,7 +20,8 @@
         "league/commonmark": "^2.5",
         "maatwebsite/excel": "^3.1",
         "mckenziearts/laravel-notify": "^2.5",
-        "predis/predis": "^2.3"
+        "predis/predis": "^2.3",
+        "spatie/laravel-responsecache": "^7.6"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.13",
