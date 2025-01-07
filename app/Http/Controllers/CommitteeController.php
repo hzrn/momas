@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Committee;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
-
 
 class CommitteeController extends Controller
 {
@@ -15,8 +16,13 @@ class CommitteeController extends Controller
      */
     public function index()
     {
-        // Retrieve committees ordered by latest created first
-        $committee = Committee::MosqueUser()->orderBy('created_at', 'desc')->get();
+        // Cache the committee list for 10 minutes
+        $committee = Cache::remember('committee_list', 600, function () {
+            Log::info('Committee list fetched from database and cached.');
+            return Committee::MosqueUser()->orderBy('created_at', 'desc')->get();
+        });
+
+        Log::info('Committee list retrieved from cache.');
         return view('committee_index', [
             'committee' => $committee,
             'title' => __('committee.title'),
@@ -53,6 +59,8 @@ class CommitteeController extends Controller
         }
 
         Committee::create($requestData);
+        Cache::forget('committee_list'); // Clear the cache after creating a new committee
+        Log::info('New committee created and cache cleared.');
         flash(__('committee.saved'))->success();
         return redirect()->route('committee.index');
     }
@@ -62,8 +70,15 @@ class CommitteeController extends Controller
      */
     public function show(Committee $committee)
     {
+        // Cache the specific committee for 10 minutes
+        $cachedCommittee = Cache::remember("committee_{$committee->id}", 600, function () use ($committee) {
+            Log::info("Committee ID {$committee->id} fetched from database and cached.");
+            return $committee;
+        });
+
+        Log::info("Committee ID {$committee->id} retrieved from cache.");
         return view('committee_show', [
-            'committee' => $committee,
+            'committee' => $cachedCommittee,
             'title' => __('committee.details_title'),
         ]);
     }
@@ -98,6 +113,9 @@ class CommitteeController extends Controller
         }
 
         $committee->update($validatedData);
+        Cache::forget('committee_list'); // Clear the cache after updating
+        Cache::forget("committee_{$committee->id}"); // Clear the specific cache for the updated committee
+        Log::info("Committee ID {$committee->id} updated and cache cleared.");
         flash(__('committee.updated'))->success();
         return redirect()->route('committee.index');
     }
@@ -109,7 +127,9 @@ class CommitteeController extends Controller
     {
         $this->deletePhoto($committee->photo);
         $committee->delete();
-
+        Cache::forget('committee_list'); // Clear the cache after deletion
+        Cache::forget("committee_{$committee->id}"); // Clear the specific cache for the deleted committee
+        Log::info("Committee ID {$committee->id} deleted and cache cleared.");
         flash(__('committee.deleted'))->success();
         return redirect()->route('committee.index');
     }
