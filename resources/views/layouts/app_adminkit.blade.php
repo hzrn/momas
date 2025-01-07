@@ -13,17 +13,11 @@
 
     <link rel="shortcut icon" href="{{ asset('images/mosque-icon.png') }}" type="image/png" />
 
-    <!-- jQuery (if not already included) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-
     <!-- Bootstrap CSS (CDN) -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
-
-    <!-- Bootstrap JS (CDN) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
     <!-- Bootstrap Icons (CDN) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -32,19 +26,22 @@
     <link rel="stylesheet" href="https://unpkg.com/@adminkit/core@latest/dist/css/app.css">
 
     <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
+    <!-- jQuery (if not already included) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" defer></script>
 
+    <!-- Bootstrap JS (CDN) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js" defer></script>
 
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js" defer></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js" defer></script>
 
-    <style>
-        .dropdown-item:focus,
-        .dropdown-item:active {
-            background-color: transparent; /* Remove background color on focus/active */
-            color: inherit; /* Keep the text color as it is */
-        }
-    </style>
-
+    <!-- Feather Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" defer></script>
 
 </head>
 
@@ -242,15 +239,20 @@
                 background-color: #007bff;
                 color: white;
             }
-        </style>
 
-        <style>
-            /* Add a fade-out effect */
+            .dropdown-item:focus,
+            .dropdown-item:active {
+                background-color: transparent; /* Remove background color on focus/active */
+                color: inherit; /* Keep the text color as it is */
+            }
+
+                        /* Add a fade-out effect */
             .fade-out {
                 opacity: 0;
                 transition: opacity 1s ease-out;  /* Adjust duration and easing */
             }
         </style>
+
     </div>
 
     <!-- DataTables JS -->
