@@ -1,6 +1,7 @@
 @extends('layouts.app_adminkit')
 
 @section('content')
+@include('partials.delete_modal')
 <h1 class="h3 mb-3">{{$title}}</h1>
 <a href="{{ route('committee.create') }}" class="btn btn-primary mb-3">{{ __('committee.add') }}</a>
 <a href="{{ route('committee.exportPDF', request()->all()) }}" class="btn btn-secondary mb-3">{{ __('committee.export_pdf') }}</a>
@@ -72,6 +73,15 @@
                 "url": "{{ app()->getLocale() === 'ms' ? 'https://cdn.datatables.net/plug-ins/1.13.5/i18n/ms.json' : 'https://cdn.datatables.net/plug-ins/1.13.5/i18n/en-GB.json' }}"
             }
         });
+
+                // Handle the delete modal
+                $('#deleteModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var url = button.data('url'); // Extract info from data-* attributes
+            var form = $('#deleteForm');
+            form.attr('action', url);
+        });
+    
 
 
     });
