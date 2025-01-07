@@ -4,18 +4,18 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">{{ __('Confirm Delete') }}</h5>
+                <h5 class="modal-title" id="deleteModalLabel">{{ __('delete_m.confirm_delete') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                {{ __('Are you sure you want to delete this item?') }}
+                {{ __('delete_m.are_you_sure') }}
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __(''delete_m.cancel'') }}</button>
                 <form id="deleteForm" method="POST" action="">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger">{{ __('Delete') }}</button>
+                    <button type="submit" class="btn btn-danger">{{ __(''delete_m.delete'') }}</button>
                 </form>
             </div>
         </div>

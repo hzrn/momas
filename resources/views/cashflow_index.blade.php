@@ -1,6 +1,8 @@
 @extends('layouts.app_adminkit')
 
 @section('content')
+@include('partials.delete_modal')
+
     <h1 class="h3 mb-3">{{$title}}</h1>
     <a href="{{ route('cashflow.create') }}" class="btn btn-primary mb-3">{{__('cashflow.add')}}</a>
     <a href="{{ route('cashflow.exportPDF', request()->all()) }}" class="btn btn-secondary mb-3">{{__('cashflow.export_pdf')}}</a>
@@ -66,7 +68,7 @@
                                 <form action="{{ route('cashflow.destroy', $item->id) }}" method="POST" style="display:inline-block;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger mb-1">{{ __('cashflow.delete') }}</button>
+                                    <button type="button" class="btn btn-danger mb-1" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="{{ route('cashflow.destroy', $item->id) }}">{{ __('committee.delete') }}</button>
                                 </form>
                             </td>
                         </tr>
@@ -111,6 +113,14 @@
                     "url": "{{ app()->getLocale() === 'ms' ? 'https://cdn.datatables.net/plug-ins/1.13.5/i18n/ms.json' : 'https://cdn.datatables.net/plug-ins/1.13.5/i18n/en-GB.json' }}"
                 }
             });
+        });
+
+                        // Handle the delete modal
+                        $('#deleteModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var url = button.data('url'); // Extract info from data-* attributes
+            var form = $('#deleteForm');
+            form.attr('action', url);
         });
     </script>
 

@@ -1,6 +1,8 @@
 @extends('layouts.app_adminkit')
 
 @section('content')
+@include('partials.delete_modal')
+
 <!-- Modal for Calendar -->
 <div id="calendar-modal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
@@ -76,7 +78,7 @@
                                     <form action="{{ route('info.destroy', $item->id) }}" method="POST" style="display:inline-block;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger mb-1">{{ __('info.delete') }}</button>
+                                        <button type="button" class="btn btn-danger mb-1" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="{{ route('info.destroy', $item->id) }}">{{ __('committee.delete') }}</button>
                                     </form>
                                 </td>
                             </tr>
@@ -203,5 +205,13 @@ $(document).ready(function () {
         }
     });
 });
+
+                // Handle the delete modal
+                $('#deleteModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var url = button.data('url'); // Extract info from data-* attributes
+            var form = $('#deleteForm');
+            form.attr('action', url);
+        });
 </script>
 @endsection

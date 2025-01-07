@@ -1,6 +1,7 @@
 @extends('layouts.app_adminkit')
 
 @section('content')
+@include('partials.delete_modal')
 
     <h1 class="h3 mb-3">{{$title}}</h1>
     <a href="{{ route('profile.create') }}" class="btn btn-primary mb-3">{{__('profile.add')}}</a>
@@ -35,7 +36,7 @@
                             <form action="{{ route('profile.destroy', $item->id) }}" method="POST" style="display:inline-block;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger mb-1">{{__('profile.delete')}}</button>
+                                <button type="button" class="btn btn-danger mb-1" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="{{ route('profile.destroy', $item->id) }}">{{ __('committee.delete') }}</button>
                             </form>
                         </td>
                     </tr>
