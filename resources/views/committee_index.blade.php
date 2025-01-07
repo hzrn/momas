@@ -44,7 +44,7 @@
                                         <form action="{{ route('committee.destroy', $item->id) }}" method="POST" style="display:inline-block;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger mb-1">{{ __('committee.delete') }}</button>
+                                            <button type="button" class="btn btn-danger mb-1" data-bs-toggle="modal" data-bs-target="#deleteModal" data-url="{{ route('committee.destroy', $item->id) }}">{{ __('committee.delete') }}</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -81,7 +81,7 @@
             var form = $('#deleteForm');
             form.attr('action', url);
         });
-    
+
 
 
     });
