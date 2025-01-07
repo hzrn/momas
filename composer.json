@@ -19,7 +19,8 @@
         "laravelcollective/html": "^6.4",
         "league/commonmark": "^2.5",
         "maatwebsite/excel": "^3.1",
-        "mckenziearts/laravel-notify": "^2.5"
+        "mckenziearts/laravel-notify": "^2.5",
+        "predis/predis": "^2.3"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.13",
