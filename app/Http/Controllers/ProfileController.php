@@ -13,7 +13,7 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        $profile = Profile::MosqueUser()->latest()->paginate(10);
+        $profile = Profile::MosqueUser()->get();
         return view('profile_index', ['profile' => $profile, 'title' => __('profile.title')]);
     }
 
